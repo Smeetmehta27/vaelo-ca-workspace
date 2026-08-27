@@ -1,3 +1,11 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
+
 export type ReportType = 'cma' | 'feasibility' | 'financial_health';
 export type ReportStatus = 'draft' | 'reviewed' | 'finalized';
 
@@ -21,7 +29,7 @@ export interface ClientFinancials {
   id: string;
   client_id: string;
   financial_year: string;
-  raw_data: any;
+  raw_data: Json;
   created_at: string;
 }
 
@@ -30,7 +38,7 @@ export interface Report {
   client_id: string;
   report_type: ReportType;
   status: ReportStatus;
-  output_data: any;
+  output_data: Json;
   generated_at: string | null;
   created_at: string;
 }

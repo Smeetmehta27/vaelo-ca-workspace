@@ -16,10 +16,10 @@ export async function createClientAction(formData: FormData) {
   const entity_type = formData.get('entity_type') as string
 
   if (!company_name) {
-    return { error: 'Company Name is required' }
+    throw new Error('Company Name is required')
   }
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('clients')
     .insert({
       ca_id: user.id,
@@ -31,7 +31,7 @@ export async function createClientAction(formData: FormData) {
 
   if (error) {
     console.error('Error creating client:', error)
-    return { error: 'Failed to create client' }
+    throw new Error('Failed to create client')
   }
 
   revalidatePath('/clients')

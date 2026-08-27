@@ -25,7 +25,7 @@ export default function LoginPage({
           <button formAction={login} className="w-full bg-slate-900 text-white py-2 px-4 rounded-md shadow-sm hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-colors sm:text-sm font-medium">Log In</button>
         </form>
         <p className="mt-6 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
           <Link href="/signup" className="font-medium text-slate-900 hover:underline">
             Sign up
           </Link>
