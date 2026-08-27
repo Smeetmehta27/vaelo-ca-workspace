@@ -21,7 +21,7 @@ export function CMAMPBFSchedule({ historical, projections }: CMAScheduleProps) {
         <ScheduleRow label="MPBF (Analytical Permissible Finance)" historicalValue="-" projectedValues={projections.map(p => p.mpbfMethod2)} />
         
         <ScheduleRow label="Limits & Utilization" isHeader={true} />
-        <ScheduleRow label="Sanctioned Limit (Bank Ceiling)" historicalValue="-" projectedValues={projections.map(p => p.shortTermBorrowings.inputs.sanctionedLimit ? { value: p.shortTermBorrowings.inputs.sanctionedLimit, formula: 'sanctionedLimit', inputs: {} } as AuditedValue : null)} />
+        <ScheduleRow label="Sanctioned Limit (Bank Ceiling)" historicalValue="-" projectedValues={projections.map(p => p.shortTermBorrowings?.inputs?.sanctionedLimit ? { value: p.shortTermBorrowings.inputs.sanctionedLimit, formula: 'sanctionedLimit', inputs: {} } as AuditedValue : null)} />
         <ScheduleRow label="Drawing Power (Operational Constraint)" historicalValue="-" projectedValues={projections.map(p => p.drawingPower)} />
         <ScheduleRow label="Projected CC Utilization" isSubTotal={true} historicalValue={historical ? formatCurrency(historical.shortTermBorrowings) : '-'} projectedValues={projections.map(p => p.shortTermBorrowings)} />
         <ScheduleRow label="Unfunded Deficit" historicalValue="-" projectedValues={projections.map(p => p.unfundedCashDeficit)} />

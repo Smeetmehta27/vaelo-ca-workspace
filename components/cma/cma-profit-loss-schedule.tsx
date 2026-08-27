@@ -48,7 +48,7 @@ export function CMAProfitLossSchedule({ historical, projections }: CMASchedulePr
       <ScheduleRow 
         label="Less: Interest" 
         indent={true}
-        historicalValue={historical ? formatCurrency(historical.interestPaid) : '-'} 
+        historicalValue="-" 
         projectedValues={projections.map(p => p.interest)} 
       />
       <ScheduleRow 

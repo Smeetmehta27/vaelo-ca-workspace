@@ -19,8 +19,6 @@ export type CMAHistoricalInput = {
   shortTermBorrowings: number;
   otherNonCurrentLiabilities: number;
   equity: number;
-  interestPaid: number;
-  principalRepayment: number;
 };
 
 export type CMAAssumptions = {

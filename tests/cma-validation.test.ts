@@ -18,8 +18,6 @@ describe('CMA Input Validation (Phase 9)', () => {
     termLoans: 5000000,
     otherNonCurrentLiabilities: 0,
     equity: 1000000,
-    interestPaid: 500000,
-    principalRepayment: 1000000,
     shortTermBorrowings: 2000000,
   });
 

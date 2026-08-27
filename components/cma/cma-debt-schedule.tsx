@@ -6,8 +6,8 @@ export function CMADebtSchedule({ historical, projections }: CMAScheduleProps) {
   return (
     <ScheduleLayout title="Schedule 12 — Term Loan / Debt Schedule" historical={historical} projections={projections}>
       <ScheduleRow label="Opening Term Loan Balance" historicalValue="-" projectedValues={projections.map(p => p.openingTermLoans)} />
-      <ScheduleRow label="Less: Principal Repayment" historicalValue={historical ? formatCurrency(historical.principalRepayment) : '-'} projectedValues={projections.map(p => ({
-        value: p.termLoans.inputs.principalRepayment,
+      <ScheduleRow label="Less: Principal Repayment" historicalValue="-" projectedValues={projections.map(p => ({
+        value: p.termLoans?.inputs?.principalRepayment ?? 0,
         formula: 'assump.principalRepayment',
         inputs: {}
       } as AuditedValue))} />

@@ -28,8 +28,8 @@ export function mapV1ToV2Projections(legacyProjections: any[]): CMAProjectedYear
   let previousFixedAssets = 0;
 
   return legacyProjections.map((p) => {
-    // If it already has Phase 8 fields, it's not a true V1 payload or was already mapped
-    if (p.totalLiabilitiesAndEquity !== undefined) {
+    // If it already has Phase 8 fields AND is fully AuditedValue compliant, it's not a true V1 payload
+    if (p.totalLiabilitiesAndEquity !== undefined && p.totalAssets !== undefined && typeof p.totalAssets === 'object' && 'value' in p.totalAssets) {
       return p as CMAProjectedYear;
     }
 
@@ -54,7 +54,15 @@ export function mapV1ToV2Projections(legacyProjections: any[]): CMAProjectedYear
     const wcg = totalCurrentAssets - (creditors + otherCurrentLiabilities);
     const bc = wcg * 0.25;
 
-    const normalized = { ...p };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const normalized: Record<string, any> = { ...p };
+
+    // Automatically wrap any unmapped primitive numbers into AuditedValues
+    for (const [key, val] of Object.entries(normalized)) {
+      if (typeof val === 'number' && key !== 'year') {
+        normalized[key] = createAudited(val, 'Legacy V1 field');
+      }
+    }
 
     // 1. Balance Sheet Core
     normalized.totalAssets = createAudited(
@@ -103,6 +111,12 @@ export function mapV1ToV2Projections(legacyProjections: any[]): CMAProjectedYear
     normalized.ccDraw = createAudited(0, 'N/A in V1');
     normalized.ccRepayment = createAudited(0, 'N/A in V1');
     normalized.cabf = createAudited(0, 'N/A in V1');
+    
+    // Missing Phase 8+ variables
+    if (normalized.drawingPower === undefined) normalized.drawingPower = createAudited(0, 'N/A in V1');
+    if (normalized.mpbfMethod2 === undefined) normalized.mpbfMethod2 = createAudited(0, 'N/A in V1');
+    if (normalized.unfundedCashDeficit === undefined) normalized.unfundedCashDeficit = createAudited(0, 'N/A in V1');
+    if (normalized.cashSweep === undefined) normalized.cashSweep = createAudited(0, 'N/A in V1');
     
     // DP variables
     normalized.eligibleStock = createAudited(stock, 'Assumed equal to stock in V1 mapping', { stock });

@@ -18,8 +18,6 @@ describe('CMA Pipeline Tests', () => {
     otherNonCurrentAssets: 0,
     otherNonCurrentLiabilities: 0,
     equity: 1000000,
-    interestPaid: 500000,
-    principalRepayment: 500000,
     shortTermBorrowings: 2000000
   };
 

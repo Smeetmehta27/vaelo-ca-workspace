@@ -130,8 +130,8 @@ export function CMAScenarioComparison({ baseProjections, scenarios, reportData }
             </tr>
             <tr>
               <td className="px-6 py-3 text-slate-600">Sanctioned CC Limit</td>
-              <td className="px-6 py-3 text-right font-medium text-slate-900">{formatCurrency({ value: baseFinal?.drawingPower.inputs?.sanctionedLimit ?? 0 })}</td>
-              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-slate-700">{formatCurrency({ value: getFinalYear(s.projections)?.drawingPower.inputs?.sanctionedLimit ?? 0 })}</td>)}
+              <td className="px-6 py-3 text-right font-medium text-slate-900">{formatCurrency({ value: baseFinal?.drawingPower?.inputs?.sanctionedLimit ?? 0 })}</td>
+              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-slate-700">{formatCurrency({ value: getFinalYear(s.projections)?.drawingPower?.inputs?.sanctionedLimit ?? 0 })}</td>)}
             </tr>
             <tr>
               <td className="px-6 py-3 text-slate-600">CC Utilization</td>

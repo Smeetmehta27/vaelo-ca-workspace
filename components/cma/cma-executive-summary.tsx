@@ -65,7 +65,7 @@ export function CMAExecutiveSummary({ historical, projections }: CMAScheduleProp
       <ScheduleRow 
         label="Sanctioned CC Limit" 
         historicalValue="-" 
-        projectedValues={projections.map(p => ({ value: p.drawingPower.inputs?.sanctionedLimit ?? 0, formula: 'Sanctioned Limit', inputs: {} }))} 
+        projectedValues={projections.map(p => ({ value: p.drawingPower?.inputs?.sanctionedLimit ?? 0, formula: 'Sanctioned Limit', inputs: {} }))} 
       />
       <ScheduleRow 
         label="Closing CC Utilization" 

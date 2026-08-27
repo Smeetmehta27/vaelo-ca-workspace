@@ -48,7 +48,7 @@ export default async function ClientDetailPage({
   if (latestReport && currentTab === 'cma') {
     fullCmaData = latestReport.output_data;
     if (Array.isArray(latestReport.output_data)) {
-      cmaProjections = latestReport.output_data;
+      cmaProjections = mapV1ToV2Projections(latestReport.output_data);
     } else if (latestReport.output_data) {
       cmaHistorical = latestReport.output_data.historical || null;
       // Handle V1 format (projections) vs V2 format (baseCase.projections)

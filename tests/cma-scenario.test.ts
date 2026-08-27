@@ -20,8 +20,6 @@ describe('CMA Phase 11 - Scenario Degradation & Covenants', () => {
     otherNonCurrentAssets: 0,
     otherNonCurrentLiabilities: 0,
     equity: 1000000,
-    interestPaid: 500000,
-    principalRepayment: 500000,
     shortTermBorrowings: 2000000
   };
 

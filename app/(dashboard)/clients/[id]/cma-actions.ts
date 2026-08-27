@@ -56,8 +56,6 @@ export async function createCMAReportAction(clientId: string, prevState: unknown
     termLoans: parseNum(formData.get('historical_termLoans')),
     otherNonCurrentLiabilities: parseNum(formData.get('historical_otherNonCurrentLiabilities')),
     equity: parseNum(formData.get('historical_equity')),
-    interestPaid: parseNum(formData.get('historical_interestPaid')),
-    principalRepayment: parseNum(formData.get('historical_principalRepayment')),
     shortTermBorrowings: parseNum(formData.get('historical_shortTermBorrowings')),
   }
 
