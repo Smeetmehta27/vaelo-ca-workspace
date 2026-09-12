@@ -55,10 +55,10 @@ export function AuditedValueDisplay({ data, isCurrency = false }: { data: Audite
   return (
     <div className="relative flex flex-col group min-w-[120px]" ref={containerRef}>
       <div className="flex items-center justify-between gap-2">
-        <span className="font-medium text-gray-900">{formatNumber(data.value)}</span>
+        <span className="font-mono text-ink">{formatNumber(data.value)}</span>
         <button 
           onClick={toggleExpand}
-          className="text-[10px] uppercase tracking-wider font-semibold text-slate-400 hover:text-blue-600 transition-colors"
+          className="text-[10px] uppercase tracking-wider font-semibold text-stone hover:text-blue-600 transition-colors"
           title="View Calculation"
         >
           {expanded ? 'Hide' : 'Audit'}
@@ -67,16 +67,16 @@ export function AuditedValueDisplay({ data, isCurrency = false }: { data: Audite
       
       {expanded && (
         <div 
-          className={`absolute right-0 ${position === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'} p-3 bg-white border border-slate-200 rounded-md shadow-xl text-xs text-slate-700 w-72 z-[100] text-left max-h-[250px] overflow-y-auto`}
+          className={`absolute right-0 ${position === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'} p-3 bg-paper border border-stone-line rounded-md shadow-xl text-xs text-ink-soft w-72 z-[100] text-left max-h-[250px] overflow-y-auto`}
         >
-          <p className="font-semibold text-slate-900 mb-1">Formula:</p>
-          <code className="block bg-slate-50 p-1.5 rounded mb-2 font-mono text-[10px] break-words">{data.formula}</code>
-          <p className="font-semibold text-slate-900 mb-1">Inputs:</p>
+          <p className="font-semibold text-ink mb-1">Formula:</p>
+          <code className="block bg-paper-dim p-1.5 rounded mb-2 font-mono text-[10px] break-words">{data.formula}</code>
+          <p className="font-semibold text-ink mb-1">Inputs:</p>
           <ul className="list-none space-y-1">
             {Object.entries(data.inputs).map(([key, val]) => (
               <li key={key} className="flex justify-between items-center border-b border-slate-50 pb-1 last:border-0">
-                <span className="font-mono text-slate-500 break-all pr-2">{key}</span> 
-                <span className="font-medium whitespace-nowrap">{formatNumber(val)}</span>
+                <span className="font-mono text-ink-soft break-all pr-2">{key}</span> 
+                <span className="font-mono font-medium whitespace-nowrap">{formatNumber(val)}</span>
               </li>
             ))}
           </ul>

@@ -19,10 +19,25 @@ export async function createClientAction(formData: FormData) {
     throw new Error('Company Name is required')
   }
 
+  const { data: teamMember, error: tmError } = await supabase
+    .from('team_members')
+    .select('id, firm_id, role')
+    .eq('user_id', user.id)
+    .single()
+
+  if (tmError || !teamMember) {
+    throw new Error('User is not associated with a firm')
+  }
+
+  if (teamMember.role === 'staff') {
+    throw new Error('Staff members cannot create new clients')
+  }
+
   const { error } = await supabase
     .from('clients')
     .insert({
-      ca_id: user.id,
+      ca_id: teamMember.firm_id,
+      assigned_to: teamMember.id,
       company_name,
       entity_type: entity_type || null
     })

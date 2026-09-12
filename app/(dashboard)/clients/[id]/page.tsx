@@ -1,3 +1,4 @@
+import { formatDate } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -70,30 +71,32 @@ export default async function ClientDetailPage({
     { id: 'cma', label: 'CMA Report' },
     { id: 'feasibility', label: 'Deal Feasibility' },
     { id: 'health', label: 'Financial Health' },
+    { id: 'documents', label: 'Documents' },
+    { id: 'timeline', label: 'Timeline' },
   ]
 
   return (
     <div className="max-w-6xl mx-auto flex flex-col gap-8">
       <div className="flex justify-between items-start">
         <div>
-          <Link href="/clients" className="text-sm font-medium text-slate-600 hover:text-slate-900 mb-2 inline-block">&larr; Back to Clients</Link>
-          <h2 className="text-3xl font-medium text-gray-900">{client.company_name}</h2>
-          <p className="text-gray-500 mt-1">{client.entity_type || 'Entity type not specified'}</p>
+          <Link href="/clients" className="text-sm font-medium text-ink-soft hover:text-ink mb-2 inline-block">&larr; Back to Clients</Link>
+          <h2 className="text-3xl font-serif font-medium text-ink">{client.company_name}</h2>
+          <p className="text-ink-soft mt-1">{client.entity_type || 'Entity type not specified'}</p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="border-b border-stone-line">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
           {tabs.map((tab) => (
             <Link
               key={tab.id}
-              href={`/clients/${client.id}?tab=${tab.id}`}
+              href={tab.id === 'documents' || tab.id === 'timeline' ? `/clients/${client.id}/${tab.id}` : `/clients/${client.id}?tab=${tab.id}`}
               className={`
-                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
+                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors
                 ${currentTab === tab.id
-                  ? 'border-slate-900 text-slate-900'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-ink text-ink'
+                  : 'border-transparent text-ink-soft hover:text-ink hover:border-stone'
                 }
               `}
             >
@@ -105,33 +108,33 @@ export default async function ClientDetailPage({
 
       {/* Latest Report Viewer */}
       {latestReport ? (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+        <div className="bg-paper-dim rounded-card border border-stone-line">
+          <div className="px-6 py-4 border-b border-stone-line flex justify-between items-center">
             <div>
-              <h3 className="text-lg font-medium text-gray-900">Latest {tabs.find(t => t.id === currentTab)?.label}</h3>
-              <p className="text-sm text-gray-500">Generated on {new Date(latestReport.created_at).toLocaleString()}</p>
+              <h3 className="text-lg font-serif font-medium text-ink">Latest {tabs.find(t => t.id === currentTab)?.label}</h3>
+              <p className="text-sm font-mono text-ink-soft mt-1">Generated on {formatDate(latestReport.created_at)}</p>
             </div>
-            <span className="text-xs px-2 py-1 rounded-full uppercase font-bold tracking-wider bg-gray-200 text-gray-800">
+            <span className="text-xs px-3 py-1 rounded-full font-mono uppercase tracking-wider border border-stone-line bg-paper text-ink">
               {latestReport.status}
             </span>
           </div>
           <div className="p-6 relative">
-            {currentTab === 'cma' && <CMAReportViewer historical={cmaHistorical} projections={cmaProjections} reportData={fullCmaData} />}
-            {currentTab === 'feasibility' && <FeasibilityReportViewer result={latestReport.output_data} />}
-            {currentTab === 'health' && <FinancialHealthViewer result={latestReport.output_data} />}
+            {currentTab === 'cma' && <CMAReportViewer clientId={params.id} historical={cmaHistorical} projections={cmaProjections} reportData={fullCmaData} />}
+            {currentTab === 'feasibility' && <FeasibilityReportViewer clientId={params.id} result={latestReport.output_data} />}
+            {currentTab === 'health' && <FinancialHealthViewer clientId={params.id} result={latestReport.output_data} />}
           </div>
         </div>
       ) : (
-        <div className="bg-white rounded-lg border border-gray-200 p-8 text-center text-gray-500 shadow-sm">
+        <div className="bg-paper-dim rounded-card border border-stone-line p-8 text-center text-ink-soft">
           No {tabs.find(t => t.id === currentTab)?.label} generated yet. Fill out the form below to run the pipeline.
         </div>
       )}
 
       {/* Generation Form */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-12">
-        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-          <h3 className="text-lg font-medium text-gray-900">Generate New {tabs.find(t => t.id === currentTab)?.label}</h3>
-          <p className="text-sm text-gray-500">Enter assumptions below to run the deterministic calculation pipeline.</p>
+      <div className="bg-paper-dim rounded-card border border-stone-line overflow-hidden mb-12">
+        <div className="px-6 py-4 border-b border-stone-line">
+          <h3 className="text-lg font-serif font-medium text-ink">Generate New {tabs.find(t => t.id === currentTab)?.label}</h3>
+          <p className="text-sm text-ink-soft mt-1">Enter assumptions below to run the deterministic calculation pipeline.</p>
         </div>
         <div className="p-6">
           {currentTab === 'cma' && <CMAForm action={generateCMAWithId} />}

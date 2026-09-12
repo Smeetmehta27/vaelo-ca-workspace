@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vaelo
 
-## Getting Started
+Vaelo is a financial and legal workspace designed specifically for Chartered Accountants (CAs). It streamlines client management, financial reporting, and document requests into a single secure platform.
 
-First, run the development server:
+## Tech Stack
 
+This project is built using modern web technologies:
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Backend & Database:** Supabase (PostgreSQL, Row Level Security, Auth, Storage, Edge Functions)
+- **Document Export:** docx, exceljs
+
+## Features
+
+- **Client Management:** Manage clients with team/role-based access. Includes a 3-tier role hierarchy (Owner, Partner, Staff) managed via Supabase Row Level Security (RLS).
+- **Financial Reporting Pipelines:** Deterministic and standardized calculation pipelines for:
+  - Credit Monitoring Arrangement (CMA) Reports
+  - Deal Feasibility Reports
+  - Financial Health Snapshots
+- **Report Exports:** Export any generated report cleanly to PDF, DOCX (Word), or XLSX (Excel).
+- **Document Request Workflow:** Manage document request lists and track status.
+- **Client Upload Portal:** Tokenized, secure uploads for clients without requiring them to log into the main CA dashboard.
+- **Activity Timeline:** Track key events and actions per client.
+
+## Setup Instructions
+
+### 1. Environment Variables
+
+Create a `.env.local` file in the root of the repository based on the required environment variables. **Do not** commit your `.env.local` file.
+
+Required variables:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+```
+
+### 2. Database Migrations
+
+The database schema and RLS policies are managed via Supabase migrations. Ensure you have the Supabase CLI installed.
+
+To push all migrations to your linked Supabase project:
+```bash
+supabase db push
+```
+
+*Note: The migrations set up the `team_members` based RLS policies and `report_type` enums required for the app to function securely.*
+
+### 3. Running the Development Server
+
+First, install the required dependencies:
+```bash
+npm install
+```
+
+Start the development server:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

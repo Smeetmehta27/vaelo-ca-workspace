@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vaelo — Identity System</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --ink:#14171C;
+  --ink-soft:#4B4A45;
+  --paper:#F7F4EF;
+  --paper-dim:#EFEAE1;
+  --stone:#CFC8BA;
+  --stone-line:#DAD4C6;
+  --bronze:#96733A;
+  --bronze-deep:#6E5225;
+  --bronze-tint:#F1E6D2;
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'IBM Plex Sans', sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px 120px;}
+
+.eyebrow{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--bronze-deep);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0 0 14px;
+}
+.eyebrow::before{
+  content:"";
+  width:14px;height:1px;background:var(--bronze);
+  display:inline-block;
+}
+
+/* ---- masthead ---- */
+.masthead{
+  padding:70px 0 50px;
+  border-bottom:1px solid var(--stone-line);
+}
+.masthead-top{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-bottom:46px;
+}
+.masthead-label{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;
+  color:var(--ink-soft);text-transform:uppercase;text-align:right;line-height:1.7;
+}
+.hero-lockup{display:flex;align-items:center;gap:22px;}
+.hero-lockup svg{width:96px;height:96px;flex:none;}
+.hero-word{
+  font-family:'Source Serif 4',serif;font-weight:560;
+  font-size:104px;letter-spacing:-0.015em;line-height:1;color:var(--ink);
+}
+.masthead-sub{
+  max-width:640px;font-size:16px;line-height:1.65;color:var(--ink-soft);margin-top:28px;
+}
+
+/* ---- section shell ---- */
+section{padding:64px 0;border-bottom:1px solid var(--stone-line);}
+h2{
+  font-family:'Source Serif 4',serif;font-weight:560;font-size:30px;
+  margin:0 0 8px;letter-spacing:-0.01em;
+}
+.section-note{font-size:14.5px;line-height:1.6;color:var(--ink-soft);max-width:620px;margin:0 0 40px;}
+
+/* ---- symbol hero ---- */
+.symbol-hero{
+  display:grid;grid-template-columns:340px 1fr;gap:56px;align-items:center;
+}
+.symbol-stage{
+  background:var(--paper-dim);border:1px solid var(--stone-line);border-radius:22px;
+  display:flex;align-items:center;justify-content:center;padding:50px;
+}
+.symbol-stage svg{width:220px;height:220px;}
+.construction-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px;}
+.construction-list li{display:flex;gap:16px;font-size:14.5px;line-height:1.6;color:var(--ink-soft);}
+.construction-list b{color:var(--ink);font-weight:600;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--bronze);flex:none;margin-top:7px;}
+
+/* ---- small sizes strip ---- */
+.sizes-row{display:flex;align-items:flex-end;gap:44px;margin-top:8px;flex-wrap:wrap;}
+.size-card{text-align:center;}
+.size-tile{
+  background:var(--ink);border-radius:9px;display:flex;align-items:center;justify-content:center;
+  margin:0 auto 10px;
+}
+.size-tile svg{color:var(--paper);}
+.size-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);letter-spacing:.05em;}
+
+/* ---- wordmark ---- */
+.wordmark-stage{
+  background:var(--paper-dim);border:1px solid var(--stone-line);border-radius:22px;
+  padding:60px 40px;text-align:center;margin-bottom:34px;
+}
+.wordmark-stage .w{font-family:'Source Serif 4',serif;font-weight:560;font-size:88px;letter-spacing:-0.015em;color:var(--ink);}
+.type-specs{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+.spec{border-top:1px solid var(--stone-line);padding-top:12px;}
+.spec .k{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--bronze-deep);margin-bottom:6px;}
+.spec .v{font-size:14px;color:var(--ink);}
+
+/* ---- lockups ---- */
+.lockup-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.lockup-card{
+  background:var(--paper-dim);border:1px solid var(--stone-line);border-radius:18px;
+  padding:44px 30px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;min-height:200px;
+}
+.lockup-card .cap{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--ink-soft);text-transform:uppercase;}
+.h-lockup{display:flex;align-items:center;gap:16px;}
+.h-lockup svg{width:44px;height:44px;}
+.h-lockup .w{font-family:'Source Serif 4',serif;font-weight:560;font-size:42px;color:var(--ink);}
+.s-lockup{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.s-lockup svg{width:52px;height:52px;}
+.s-lockup .w{font-family:'Source Serif 4',serif;font-weight:560;font-size:34px;color:var(--ink);}
+
+/* dark variant card */
+.lockup-card.dark{background:var(--ink);border-color:var(--ink);}
+.lockup-card.dark .w{color:var(--paper);}
+.lockup-card.dark .cap{color:var(--stone);}
+.lockup-card.dark svg{color:var(--paper);}
+
+.lockup-card.accent .w{color:var(--ink);}
+.lockup-card.accent svg{color:var(--bronze);}
+
+/* ---- color ---- */
+.swatches{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;}
+.swatch{border-radius:16px;overflow:hidden;border:1px solid var(--stone-line);}
+.swatch-color{height:110px;}
+.swatch-info{background:var(--paper);padding:14px 16px;}
+.swatch-info .name{font-family:'Source Serif 4',serif;font-size:15px;color:var(--ink);margin-bottom:3px;}
+.swatch-info .hex{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);}
+.swatch-info .role{font-size:12px;color:var(--ink-soft);margin-top:6px;line-height:1.5;}
+
+/* ---- clear space ---- */
+.clearspace-stage{
+  background:var(--paper-dim);border:1px solid var(--stone-line);border-radius:22px;
+  padding:70px;display:flex;align-items:center;justify-content:center;position:relative;
+}
+.cs-inner{position:relative;display:flex;align-items:center;gap:18px;padding:34px 42px;}
+.cs-inner svg{width:56px;height:56px;}
+.cs-inner .w{font-family:'Source Serif 4',serif;font-weight:560;font-size:52px;color:var(--ink);}
+.guide{position:absolute;border:1px dashed var(--bronze);opacity:.55;}
+.guide.top{top:0;left:0;right:0;height:34px;border-bottom:none;border-left:none;border-right:none;}
+.guide.bottom{bottom:0;left:0;right:0;height:34px;border-top:none;border-left:none;border-right:none;}
+.guide.left{top:0;bottom:0;left:0;width:42px;border-right:none;border-top:none;border-bottom:none;}
+.guide.right{top:0;bottom:0;right:0;width:42px;border-left:none;border-top:none;border-bottom:none;}
+.cs-caption{margin-top:22px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);text-align:center;letter-spacing:.03em;}
+
+/* ---- usage mockups ---- */
+.mock-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+.mock-card{border:1px solid var(--stone-line);border-radius:18px;overflow:hidden;background:var(--paper);}
+.mock-card .mock-label{
+  padding:12px 18px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--stone-line);
+}
+
+/* report mockup */
+.report{padding:30px 34px 34px;}
+.report-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:20px;}
+.report-brand{display:flex;align-items:center;gap:10px;}
+.report-brand svg{width:26px;height:26px;}
+.report-brand .w{font-family:'Source Serif 4',serif;font-weight:560;font-size:20px;color:var(--ink);}
+.report-meta{text-align:right;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink-soft);line-height:1.7;}
+.report-title{font-family:'Source Serif 4',serif;font-size:19px;color:var(--ink);margin-bottom:16px;}
+.report-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.rmetric{border-top:1px solid var(--stone-line);padding-top:8px;}
+.rmetric .k{font-size:11px;color:var(--ink-soft);margin-bottom:4px;}
+.rmetric .v{font-family:'IBM Plex Mono',monospace;font-size:18px;color:var(--ink);}
+
+/* dashboard mockup */
+.dash{display:flex;height:280px;}
+.dash-side{width:64px;background:var(--ink);display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:22px;}
+.dash-side svg{width:26px;height:26px;color:var(--paper);}
+.dash-icon{width:30px;height:30px;border-radius:8px;background:rgba(247,244,239,.12);display:flex;align-items:center;justify-content:center;}
+.dash-icon.active{background:var(--bronze);}
+.dash-icon svg{width:14px;height:14px;color:var(--paper);}
+.dash-main{flex:1;padding:20px 22px;background:var(--paper);}
+.dash-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.dash-title{font-family:'Source Serif 4',serif;font-size:16px;color:var(--ink);}
+.dash-pill{font-family:'IBM Plex Mono',monospace;font-size:10px;background:var(--bronze-tint);color:var(--bronze-deep);padding:4px 10px;border-radius:20px;}
+.dash-rows{display:flex;flex-direction:column;gap:10px;}
+.dash-row{display:flex;justify-content:space-between;align-items:center;background:var(--paper-dim);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--ink);}
+.dash-row .num{font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);}
+
+/* social + app icon */
+.social-card,.appicon-card{padding:34px;display:flex;align-items:center;justify-content:center;gap:34px;flex-wrap:wrap;}
+.avatar{width:96px;height:96px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;}
+.avatar svg{width:48px;height:48px;color:var(--paper);}
+.avatar-post{max-width:220px;}
+.post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.post-head .n{font-size:12.5px;color:var(--ink);font-weight:600;}
+.post-head .h{font-size:11px;color:var(--ink-soft);}
+.post-body{font-size:12.5px;color:var(--ink-soft);line-height:1.5;}
+.appicon{width:96px;height:96px;border-radius:24px;background:var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(20,23,28,.18);}
+.appicon svg{width:50px;height:50px;color:var(--paper);}
+.appicon.accentbg{background:var(--bronze);}
+
+/* closing */
+.closing{padding:70px 0 40px;}
+.closing h2{max-width:640px;}
+.keep-list{display:grid;grid-template-columns:1fr 1fr;gap:20px 40px;margin-top:30px;}
+.keep-item{display:flex;gap:14px;}
+.keep-item .n{font-family:'Source Serif 4',serif;color:var(--bronze-deep);font-size:20px;}
+.keep-item p{margin:0;font-size:14px;line-height:1.6;color:var(--ink-soft);}
+.keep-item b{color:var(--ink);}
+
+footer{padding:40px 0 0;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-soft);letter-spacing:.05em;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- MASTHEAD -->
+  <div class="masthead">
+    <div class="masthead-top">
+      <div>
+        <div class="eyebrow">Identity System</div>
+      </div>
+      <div class="masthead-label">Prepared for Vaelo<br>Financial intelligence workspace<br>for modern CA practices</div>
+    </div>
+    <div class="hero-lockup">
+      <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="6" width="108" height="108" rx="20" stroke="currentColor" stroke-width="2.5" opacity="0.32"/>
+        <polygon points="20,20 43,20 62,98" fill="currentColor"/>
+        <polygon points="87,20 99,20 62,98" fill="currentColor"/>
+      </svg>
+      <div class="hero-word">Vaelo</div>
+    </div>
+    <p class="masthead-sub">A refinement of the existing mark — the serif wordmark, the monochrome ink-on-paper discipline, and the wordmark-first hierarchy all carry forward unchanged. What changes is the symbol, which becomes a deliberately constructed mark instead of a typographic aside, and the addition of one proprietary color for the contexts where monochrome alone can't carry recognition.</p>
+  </div>
+
+  <!-- SYMBOL -->
+  <section>
+    <div class="eyebrow">01 — The Mark</div>
+    <h2>A V built the way the wordmark is drawn</h2>
+    <p class="section-note">The old "(V)" borrowed a punctuation mark. This one is constructed: two strokes of unequal weight converging to a single vertex — the same thick/thin contrast that gives the serif wordmark its character, translated into pure geometry. No chart, no currency mark, no literal finance symbol. The frame around it is a ledger cell, not a bracket — a quiet nod to the row-and-column discipline of the reports Vaelo actually produces.</p>
+    <div class="symbol-hero">
+      <div class="symbol-stage">
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="color:var(--ink)">
+          <rect x="6" y="6" width="108" height="108" rx="20" stroke="currentColor" stroke-width="2.5" opacity="0.32"/>
+          <polygon points="20,20 43,20 62,98" fill="currentColor"/>
+          <polygon points="87,20 99,20 62,98" fill="currentColor"/>
+        </svg>
+      </div>
+      <ul class="construction-list">
+        <li><span class="dot"></span><span><b>Unequal strokes.</b> The left arm carries the weight, the right arm is a hairline — the same optical contrast a serif V shows in the wordmark, so the icon and the letterform read as one hand.</span></li>
+        <li><span class="dot"></span><span><b>Single vertex.</b> Both strokes resolve to one point rather than a flat base — it reads as convergence, a single answer arrived at, not a container or a shape being filled in.</span></li>
+        <li><span class="dot"></span><span><b>The frame is optional.</b> At report and presentation scale it appears as a thin ledger-cell outline. At favicon and app-icon scale it's dropped entirely — the two strokes alone hold up on their own.</span></li>
+        <li><span class="dot"></span><span><b>No literal finance iconography.</b> No bar, no coin, no rupee mark, no arrow — the symbol earns its meaning from form and proportion, the same way the serif wordmark earns its authority from letterforms rather than a tagline.</span></li>
+      </ul>
+    </div>
+
+    <div style="margin-top:48px;">
+      <div class="eyebrow">Small-size performance</div>
+      <div class="sizes-row">
+        <div class="size-card">
+          <div class="size-tile" style="width:64px;height:64px;">
+            <svg viewBox="0 0 120 120" width="40" height="40"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg>
+          </div>
+          <div class="size-label">64 × 64</div>
+        </div>
+        <div class="size-card">
+          <div class="size-tile" style="width:32px;height:32px;border-radius:6px;">
+            <svg viewBox="0 0 120 120" width="21" height="21"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg>
+          </div>
+          <div class="size-label">32 × 32</div>
+        </div>
+        <div class="size-card">
+          <div class="size-tile" style="width:16px;height:16px;border-radius:3px;">
+            <svg viewBox="0 0 120 120" width="11" height="11"><polygon points="16,20 46,20 62,98" fill="currentColor"/><polygon points="90,20 102,20 62,98" fill="currentColor"/></svg>
+          </div>
+          <div class="size-label">16 × 16</div>
+        </div>
+        <div class="size-card">
+          <div class="appicon" style="width:72px;height:72px;border-radius:16px;">
+            <svg viewBox="0 0 120 120" width="38" height="38"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg>
+          </div>
+          <div class="size-label">App icon</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORDMARK -->
+  <section>
+    <div class="eyebrow">02 — Wordmark</div>
+    <h2>The serif carries forward, tightened</h2>
+    <p class="section-note">Same strategic choice as the existing mark — a serif wordmark rather than a geometric sans — set in a contemporary text serif with moderate stroke contrast: legible at small sizes, financial rather than editorial-fashion, with no old-newspaper baggage.</p>
+    <div class="wordmark-stage">
+      <div class="w">Vaelo</div>
+    </div>
+    <div class="type-specs">
+      <div class="spec"><div class="k">Typeface</div><div class="v">Source Serif 4, Medium</div></div>
+      <div class="spec"><div class="k">Tracking</div><div class="v">−1.5% at display sizes</div></div>
+      <div class="spec"><div class="k">Case</div><div class="v">Sentence case — Vaelo</div></div>
+      <div class="spec"><div class="k">Pairing</div><div class="v">IBM Plex Sans / Mono for UI &amp; data</div></div>
+    </div>
+  </section>
+
+  <!-- LOCKUPS -->
+  <section>
+    <div class="eyebrow">03 — Configurations</div>
+    <h2>One identity, five arrangements</h2>
+    <p class="section-note">The full family needed for report headers, product chrome, and marketing surfaces — every configuration built from the same two elements.</p>
+    <div class="lockup-grid">
+      <div class="lockup-card">
+        <div class="h-lockup" style="color:var(--ink)">
+          <svg viewBox="0 0 120 120"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg>
+          <div class="w">Vaelo</div>
+        </div>
+        <div class="cap">Horizontal lockup</div>
+      </div>
+      <div class="lockup-card">
+        <div class="s-lockup" style="color:var(--ink)">
+          <svg viewBox="0 0 120 120"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg>
+          <div class="w">Vaelo</div>
+        </div>
+        <div class="cap">Stacked lockup</div>
+      </div>
+      <div class="lockup-card">
+        <div class="s-lockup" style="color:var(--ink)">
+          <svg viewBox="0 0 120 120" style="width:60px;height:60px;"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg>
+        </div>
+        <div class="cap">Symbol only</div>
+      </div>
+      <div class="lockup-card">
+        <div class="w" style="font-family:'Source Serif 4',serif;font-weight:560;font-size:40px;color:var(--ink);">Vaelo</div>
+        <div class="cap">Wordmark only</div>
+      </div>
+      <div class="lockup-card dark">
+        <div class="h-lockup">
+          <svg viewBox="0 0 120 120"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg>
+          <div class="w">Vaelo</div>
+        </div>
+        <div class="cap">Reversed — dark background</div>
+      </div>
+      <div class="lockup-card accent">
+        <div class="h-lockup" style="color:var(--ink)">
+          <svg viewBox="0 0 120 120" style="color:var(--bronze)"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg>
+          <div class="w">Vaelo</div>
+        </div>
+        <div class="cap">Accent version — digital contexts</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLEAR SPACE -->
+  <section>
+    <div class="eyebrow">04 — Proportion</div>
+    <h2>Clear space, defined by the mark itself</h2>
+    <p class="section-note">The minimum clear space around the lockup equals the width of the thick left stroke of the V — a self-referential unit, so the system never depends on an arbitrary pixel value.</p>
+    <div class="clearspace-stage">
+      <div class="cs-inner">
+        <div class="guide top"></div><div class="guide bottom"></div><div class="guide left"></div><div class="guide right"></div>
+        <svg viewBox="0 0 120 120" style="color:var(--ink)"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg>
+        <div class="w">Vaelo</div>
+      </div>
+    </div>
+    <div class="cs-caption">clear space = width of the thick stroke, on all sides</div>
+  </section>
+
+  <!-- COLOR -->
+  <section>
+    <div class="eyebrow">05 — Color</div>
+    <h2>Monochrome first, one color to own</h2>
+    <p class="section-note">The report system stays ink-on-paper — that discipline is a genuine asset and isn't touched. One proprietary color is added for the contexts monochrome can't cover: product accents, social, and marketing. A muted bronze — closer to an old ledger stamp or a brass plate than to any fintech blue, teal, or purple — so it reads as financial and considered rather than trend-driven.</p>
+    <div class="swatches">
+      <div class="swatch">
+        <div class="swatch-color" style="background:var(--ink)"></div>
+        <div class="swatch-info"><div class="name">Ink</div><div class="hex">#14171C</div><div class="role">Wordmark, symbol, all print &amp; report contexts</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:var(--paper)"></div>
+        <div class="swatch-info"><div class="name">Paper</div><div class="hex">#F7F4EF</div><div class="role">Primary background, reversed logo ground</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:var(--stone)"></div>
+        <div class="swatch-info"><div class="name">Stone</div><div class="hex">#CFC8BA</div><div class="role">Dividers, structure, quiet UI chrome</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:var(--bronze)"></div>
+        <div class="swatch-info"><div class="name">Vaelo Bronze</div><div class="hex">#96733A</div><div class="role">The proprietary accent — CTAs, active states, marketing</div></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:var(--bronze-deep)"></div>
+        <div class="swatch-info"><div class="name">Bronze, deep</div><div class="hex">#6E5225</div><div class="role">Labels, hover states, small text on paper</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USAGE -->
+  <section>
+    <div class="eyebrow">06 — In Use</div>
+    <h2>The two tests: the report, and the product</h2>
+    <p class="section-note">Serious enough for a document a CA puts their name behind. Modern enough for the dashboard underneath it. Same mark, same color logic, in both places.</p>
+    <div class="mock-grid">
+      <div class="mock-card">
+        <div class="mock-label">CMA Report — Print / PDF</div>
+        <div class="report">
+          <div class="report-head">
+            <div class="report-brand">
+              <svg viewBox="0 0 120 120" style="color:var(--ink)"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg>
+              <div class="w">Vaelo</div>
+            </div>
+            <div class="report-meta">Credit Monitoring Arrangement<br>FY 2025–26 · Confidential</div>
+          </div>
+          <div class="report-title">Working capital &amp; funding assessment</div>
+          <div class="report-metrics">
+            <div class="rmetric"><div class="k">Current Ratio</div><div class="v">1.42x</div></div>
+            <div class="rmetric"><div class="k">DSCR</div><div class="v">1.86x</div></div>
+            <div class="rmetric"><div class="k">WC Gap</div><div class="v">₹0.6 Cr</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-card">
+        <div class="mock-label">Workspace — Product UI</div>
+        <div class="dash">
+          <div class="dash-side">
+            <svg viewBox="0 0 120 120"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg>
+            <div class="dash-icon active"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" stroke-width="2"/></svg></div>
+            <div class="dash-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/></svg></div>
+            <div class="dash-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20V4M12 20V10M20 20V14" stroke="currentColor" stroke-width="2"/></svg></div>
+          </div>
+          <div class="dash-main">
+            <div class="dash-top"><div class="dash-title">Financial Health — Live</div><div class="dash-pill">Strong</div></div>
+            <div class="dash-rows">
+              <div class="dash-row"><span>Revenue, FY24</span><span class="num">₹4.8 Cr</span></div>
+              <div class="dash-row"><span>Current Ratio</span><span class="num">1.42x</span></div>
+              <div class="dash-row"><span>DSCR</span><span class="num">1.86x</span></div>
+              <div class="dash-row"><span>Working Capital Gap</span><span class="num">₹0.6 Cr</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-card">
+        <div class="mock-label">Social Avatar</div>
+        <div class="social-card">
+          <div class="avatar"><svg viewBox="0 0 120 120"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg></div>
+          <div class="avatar-post">
+            <div class="post-head"><span class="n">Vaelo</span><span class="h">@vaelo.co.in</span></div>
+            <div class="post-body">5 financial warning signs every CA should catch early — a working-capital thread.</div>
+          </div>
+        </div>
+      </div>
+      <div class="mock-card">
+        <div class="mock-label">App / Browser Icon</div>
+        <div class="appicon-card">
+          <div class="appicon"><svg viewBox="0 0 120 120"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg></div>
+          <div class="appicon accentbg"><svg viewBox="0 0 120 120"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg></div>
+        </div>
+      </div>
+      <div class="mock-card">
+        <div class="mock-label">Monochrome — B&amp;W Print</div>
+        <div class="appicon-card" style="background:#fff;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <svg viewBox="0 0 120 120" width="44" height="44" style="color:#000"><polygon points="20,20 43,20 62,98" fill="currentColor"/><polygon points="87,20 99,20 62,98" fill="currentColor"/></svg>
+            <div style="font-family:'Source Serif 4',serif;font-weight:560;font-size:34px;color:#000;">Vaelo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <div class="eyebrow">Summary</div>
+    <h2>What stays, and what was resolved</h2>
+    <div class="keep-list">
+      <div class="keep-item"><span class="n">—</span><p><b>Kept:</b> the serif wordmark, the ink-on-paper discipline, wordmark-first hierarchy, and the deliberate distance from geometric-sans fintech branding.</p></div>
+      <div class="keep-item"><span class="n">—</span><p><b>Resolved:</b> the "(V)" is now a constructed mark with its own logic, not borrowed punctuation.</p></div>
+      <div class="keep-item"><span class="n">—</span><p><b>Resolved:</b> the symbol holds up on its own at 16px, as a favicon, and as an app icon.</p></div>
+      <div class="keep-item"><span class="n">—</span><p><b>Resolved:</b> one proprietary color now exists for digital and marketing contexts, without touching the monochrome report identity.</p></div>
+    </div>
+  </div>
+
+  <footer>Vaelo — Identity System · vaelo.co.in</footer>
+</div>
+</body>
+</html>

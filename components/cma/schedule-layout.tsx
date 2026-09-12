@@ -14,25 +14,25 @@ export function ScheduleLayout({
 }) {
   return (
     <div className="mb-10 w-full">
-      <h3 className="text-xl font-bold text-gray-900 mb-4">{title}</h3>
+      <h3 className="text-xl font-serif text-ink mb-4">{title}</h3>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-md shadow-sm">
-          <thead className="bg-slate-50">
+        <table className="min-w-full divide-y divide-stone-line border border-stone-line rounded-md shadow-sm">
+          <thead className="bg-paper-dim">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900 border-b border-gray-200">Metric</th>
+              <th className="px-6 py-4 text-left text-sm font-semibold text-ink border-b border-stone-line">Metric</th>
               {historical && (
-                <th className="px-6 py-4 text-right text-sm font-semibold text-slate-600 border-b border-gray-200 bg-slate-100">
+                <th className="px-6 py-4 text-right text-sm font-semibold text-ink-soft border-b border-stone-line bg-paper-dim">
                   Historical
                 </th>
               )}
               {projections.map((p, i) => (
-                <th key={i} className="px-6 py-4 text-right text-sm font-semibold text-slate-900 border-b border-gray-200">
+                <th key={i} className="px-6 py-4 text-right text-sm font-semibold text-ink border-b border-stone-line">
                   Year {p.year}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-paper divide-y divide-stone-line">
             {children}
           </tbody>
         </table>
@@ -59,18 +59,18 @@ export function ScheduleRow({
   isCurrency?: boolean
 }) {
   const rowClass = isHeader 
-    ? 'bg-slate-100 font-bold text-slate-900' 
+    ? 'bg-paper-dim font-bold text-ink' 
     : isSubTotal 
-      ? 'bg-slate-50 font-semibold text-slate-900' 
-      : 'hover:bg-slate-50 text-slate-700';
+      ? 'bg-paper-dim font-semibold text-ink' 
+      : 'hover:bg-paper-dim text-ink';
 
-  const labelClass = indent ? 'pl-10 text-slate-500' : '';
+  const labelClass = indent ? 'pl-10 text-ink-soft' : '';
 
   return (
     <tr className={rowClass}>
       <td className={`px-6 py-4 text-sm ${labelClass}`}>{label}</td>
       {historicalValue !== undefined && (
-        <td className="px-6 py-4 text-right font-medium text-slate-600 bg-slate-50/50">
+        <td className="px-6 py-4 text-right font-mono font-medium text-ink-soft bg-paper-dim/50">
           {historicalValue}
         </td>
       )}

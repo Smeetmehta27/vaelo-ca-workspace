@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-  }
-}
-
-@layer base {
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply antialiased;
   }
 }
+@media print {
+  body { background: white !important; color: black !important; }
+  .no-print, header, nav, [role="navigation"] { display: none !important; }
+  table, tr, td, th { break-inside: avoid !important; }
+  .bg-paper, .bg-paper-dim, .bg-status-good-bg, .bg-status-risk-bg, .bg-bronze-tint { background: white !important; border: 1px solid #ccc !important; }
+}  
+ 

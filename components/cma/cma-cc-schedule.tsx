@@ -5,7 +5,7 @@ import { AuditedValue } from '@/lib/pipelines/cma'
 export function CMACCSchedule({ historical, projections }: CMAScheduleProps) {
   return (
     <div className="flex flex-col gap-4">
-      <div className="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-md text-sm">
+      <div className="bg-paper-dim border border-stone-line text-blue-800 p-4 rounded-md text-sm">
         <h4 className="font-bold mb-1">Financing Hierarchy</h4>
         <ul className="list-disc pl-5 space-y-1">
           <li><strong>MPBF</strong> = Analytical permissible finance based on working capital gap.</li>

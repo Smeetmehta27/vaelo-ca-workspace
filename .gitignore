@@ -34,3 +34,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# linkedin assets
+vaelo-linkedin-banner.png
+vaelo-linkedin-logo.png
+
+# scratch and diagnostic files
+inspect_*.ts
+inspect_*.js
+scratch-*.json
+scratch/
+
