@@ -13,14 +13,20 @@ export interface CMAScheduleRow {
 
 export interface CMASchedule {
   scheduleTitle: string;
-  columns?: string[];
+  columns: string[];
   rows: CMAScheduleRow[];
 }
 
 export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, projections: CMAProjectedYear[]): CMASchedule[] {
+  const cmaColumns: string[] = ["Historical"];
+  projections.forEach((_, i) => {
+    cmaColumns.push(`Year ${i + 1}`);
+  });
+
   // P&L
   const plSchedule: CMASchedule = {
     scheduleTitle: "Schedule 2 — Operating Statement / P&L",
+    columns: cmaColumns,
     rows: [
       { label: "Revenue", historicalValue: historical ? formatCurrency(historical.revenue) : '-', projectedValues: projections.map(p => p.revenue) },
       { label: "Less: COGS", indent: true, historicalValue: historical ? formatCurrency(historical.cogs) : '-', projectedValues: projections.map(p => p.cogs) },
@@ -57,6 +63,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
 
   const bsSchedule: CMASchedule = {
     scheduleTitle: "Schedule 3 — Balance Sheet",
+    columns: cmaColumns,
     rows: [
       { label: "ASSETS", isHeader: true },
       { label: "Cash & Equivalents", indent: true, historicalValue: historical ? formatCurrency(historical.cash) : '-', projectedValues: projections.map(p => p.cash) },
@@ -84,6 +91,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
   const histNWC = histCurrentAssets - histCurrentLiab;
   const wcSchedule: CMASchedule = {
     scheduleTitle: "Schedule 4 — Working Capital Analysis",
+    columns: cmaColumns,
     rows: [
       { label: "Total Current Assets (TCA)", historicalValue: historical ? formatCurrency(histCurrentAssets) : '-', projectedValues: projections.map(p => p.totalCurrentAssets) },
       { label: "Less: Current Liab. Excl. Bank", indent: true, historicalValue: historical ? formatCurrency(historical.creditors + historical.otherCurrentLiabilities) : '-', projectedValues: projections.map(p => p.currentLiabilitiesExclBank) },
@@ -97,6 +105,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
   const histMPBF = Math.max(0, (histCurrentAssets - (historical ? (historical.creditors + historical.otherCurrentLiabilities) : 0)) - (histCurrentAssets * 0.25));
   const mpbfSchedule: CMASchedule = {
     scheduleTitle: "Schedule 5 — Maximum Permissible Bank Finance (Tandon Method II)",
+    columns: cmaColumns,
     rows: [
       { label: "Total Current Assets", historicalValue: historical ? formatCurrency(histCurrentAssets) : '-', projectedValues: projections.map(p => p.totalCurrentAssets) },
       { label: "Less: Current Liab. Excl. Bank", indent: true, historicalValue: historical ? formatCurrency(historical ? (historical.creditors + historical.otherCurrentLiabilities) : 0) : '-', projectedValues: projections.map(p => p.currentLiabilitiesExclBank) },
@@ -109,6 +118,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
   // Drawing Power
   const dpSchedule: CMASchedule = {
     scheduleTitle: "Schedule 6 — Drawing Power (DP) Calculation",
+    columns: cmaColumns,
     rows: [
       { label: "Gross Stock / Inventory", historicalValue: historical ? formatCurrency(historical.stock) : '-', projectedValues: projections.map(p => p.stock) },
       { label: "Less: Margin (25%)", indent: true, historicalValue: "-", projectedValues: projections.map(p => p.stock ? { ...p.stock, value: p.stock.value * 0.25 } as AuditedValue : null) },
@@ -124,6 +134,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
   // CC
   const ccSchedule: CMASchedule = {
     scheduleTitle: "Schedule 7 — Cash Credit (CC) / Overdraft Limit",
+    columns: cmaColumns,
     rows: [
       { label: "Sanctioned Limit", historicalValue: "-", projectedValues: projections.map(p => p.drawingPower?.inputs?.sanctionedLimit ? { value: p.drawingPower.inputs.sanctionedLimit, formula: "Constant", inputs: {} } as AuditedValue : null) },
       { label: "Calculated Drawing Power (DP)", historicalValue: "-", projectedValues: projections.map(p => p.drawingPower) },
@@ -141,6 +152,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
   // Changes in WC
   const changesInWcSchedule: CMASchedule = {
     scheduleTitle: "Schedule 8 — Changes in Working Capital",
+    columns: cmaColumns,
     rows: [
       { label: "Increase (Decrease) in Stock", historicalValue: "-", projectedValues: projections.map(p => p.changeInStock) },
       { label: "Increase (Decrease) in Debtors", historicalValue: "-", projectedValues: projections.map(p => p.changeInDebtors) },
@@ -154,6 +166,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
   // Cash flow
   const cfSchedule: CMASchedule = {
     scheduleTitle: "Schedule 9 — Cash Flow Statement",
+    columns: cmaColumns,
     rows: [
       { label: "Profit After Tax (PAT)", historicalValue: "-", projectedValues: projections.map(p => p.netProfit) },
       { label: "Add: Depreciation", historicalValue: "-", projectedValues: projections.map(p => p.depreciation) },
@@ -183,6 +196,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
   // Fixed Assets
   const faSchedule: CMASchedule = {
     scheduleTitle: "Schedule 10 — Fixed Assets & Depreciation",
+    columns: cmaColumns,
     rows: [
       { label: "Opening Gross Block", historicalValue: "-", projectedValues: projections.map(p => p.openingFixedAssets) },
       { label: "Add: Additions (CapEx)", historicalValue: "-", projectedValues: projections.map(p => p.capEx) },
@@ -194,6 +208,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
   // Debt
   const debtSchedule: CMASchedule = {
     scheduleTitle: "Schedule 11 — Term Debt Movement",
+    columns: cmaColumns,
     rows: [
       { label: "Opening Balance", historicalValue: "-", projectedValues: projections.map(p => p.openingTermLoans) },
       { label: "Add: New Disbursements", historicalValue: "-", projectedValues: projections.map(() => ({ value: 0, formula: "Zero", inputs: {} } as AuditedValue)) },
@@ -208,6 +223,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
   // Equity
   const equitySchedule: CMASchedule = {
     scheduleTitle: "Schedule 12 — Equity / Net Worth",
+    columns: cmaColumns,
     rows: [
       { label: "Opening Balance", historicalValue: "-", projectedValues: projections.map(p => p.openingEquity) },
       { label: "Add: Profit After Tax (PAT)", historicalValue: "-", projectedValues: projections.map(p => p.netProfit) },
@@ -218,6 +234,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
   // Ratios
   const ratioSchedule: CMASchedule = {
     scheduleTitle: "Schedule 13 — Key Financial Ratios",
+    columns: cmaColumns,
     rows: [
       { label: "Current Ratio", historicalValue: historical ? (histCurrentLiab > 0 ? (histCurrentAssets / histCurrentLiab).toFixed(2) : 'N/A') : '-', projectedValues: projections.map(p => p.currentRatio), isCurrency: false },
       { label: "Total Debt / Equity (TDE)", historicalValue: historical ? (historical.equity > 0 ? ((historical.termLoans + historical.shortTermBorrowings) / historical.equity).toFixed(2) : 'N/A') : '-', projectedValues: projections.map(p => p.debtEquityRatio), isCurrency: false },

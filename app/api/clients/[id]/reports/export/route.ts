@@ -109,14 +109,10 @@ export async function GET(
                     children: [new Paragraph({ children: [new TextRun({ text: 'Metric', bold: true })] })],
                     shading: { fill: 'F3F4F6' }
                   }),
-                  ...(schedule.columns || []).map((col: string) => new TableCell({
+                  ...schedule.columns.map((col: string) => new TableCell({
                     children: [new Paragraph({ children: [new TextRun({ text: col, bold: true })], alignment: AlignmentType.RIGHT })],
                     shading: { fill: 'F3F4F6' }
-                  })),
-                  ...(!schedule.columns && schedule.rows.length > 0 && schedule.rows[0].projectedValues ? schedule.rows[0].projectedValues.map((_: any, i: number) => new TableCell({
-                    children: [new Paragraph({ children: [new TextRun({ text: `Year ${i + 1}`, bold: true })], alignment: AlignmentType.RIGHT })],
-                    shading: { fill: 'F3F4F6' }
-                  })) : [])
+                  }))
                 ]
               }),
               // Data Rows
@@ -204,15 +200,7 @@ export async function GET(
       currentRow++;
 
       // Headers
-      const headers = ['Metric'];
-      if (schedule.columns) {
-        headers.push(...schedule.columns);
-      } else if (schedule.rows.length > 0 && schedule.rows[0].projectedValues) {
-        if (schedule.rows[0].historicalValue !== undefined) headers.push('Historical');
-        schedule.rows[0].projectedValues.forEach((_: any, i: number) => headers.push(`Year ${i+1}`));
-      } else if (schedule.rows.length > 0 && schedule.rows[0].value !== undefined) {
-        headers.push('Value');
-      }
+      const headers = ['Metric', ...schedule.columns];
 
       const headerRow = worksheet.getRow(currentRow);
       headerRow.values = headers;
