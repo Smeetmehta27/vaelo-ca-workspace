@@ -1,41 +1,57 @@
 # Vaelo
 
-Vaelo is a financial and legal workspace designed specifically for Chartered Accountants (CAs). It streamlines client management, financial reporting, and document requests into a single secure platform.
+Vaelo is a financial intelligence workspace built for Chartered Accountant (CA) practices. It centralises client management, deterministic financial reporting, document collection, and multi-format report export into a single secure platform.
 
 ## Tech Stack
 
-This project is built using modern web technologies:
-- **Framework:** Next.js 14 (App Router)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **Backend & Database:** Supabase (PostgreSQL, Row Level Security, Auth, Storage, Edge Functions)
-- **Document Export:** docx, exceljs
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| Backend & Database | Supabase (PostgreSQL, Row Level Security, Auth, Storage) |
+| PDF Export | @react-pdf/renderer |
+| DOCX Export | docx |
+| XLSX Export | ExcelJS |
+| Testing | Vitest |
 
 ## Features
 
-- **Client Management:** Manage clients with team/role-based access. Includes a 3-tier role hierarchy (Owner, Partner, Staff) managed via Supabase Row Level Security (RLS). *Note: The 3-tier role/RLS model is fully built and enforced, but inviting new team members is not yet functional (the `team_invites` table exists, but there is no redemption flow or management UI yet).*
-- **Financial Reporting Pipelines:** Deterministic and standardized calculation pipelines for:
-  - Credit Monitoring Arrangement (CMA) Reports
-  - Deal Feasibility Reports
-  - Financial Health Snapshots
-- **Report Exports:** Report export to DOCX/XLSX (PDF export and full number formatting still in progress).
-- **Document Request Workflow:** Manage document request lists and track status.
-- **Client Upload Portal:** Tokenized, secure uploads for clients without requiring them to log into the main CA dashboard.
-- **Activity Timeline:** Track key events and actions per client.
+### Client Management
+Full client lifecycle management with a 3-tier team role hierarchy — **Owner**, **Partner**, and **Staff** — enforced at the database level via Supabase Row Level Security (RLS). Every query is scoped to the authenticated user's firm and role.
 
-## Documentation Reference
+> **Note:** The role/RLS model and the `team_members` / `team_invites` tables are fully built and enforced. However, the invite *redemption flow* (sending invitations and onboarding new team members through the UI) is **not yet implemented** — there is no management UI or email-based invite acceptance yet.
 
-For further architectural context and design specifications, refer to:
-- `docs/Vaelo_SRS.md`
-- `docs/vaelo-identity-system.html`
+### Financial Reporting Pipelines
+Three deterministic, auditable calculation pipelines that accept structured inputs and produce fully reproducible outputs:
 
-## Setup Instructions
+- **Credit Monitoring Arrangement (CMA)** — 13 schedules covering balance sheet, P&L, working capital, ratios, and fund flow, with historical + projected years
+- **Deal Feasibility** — acquisition feasibility analysis including premium/valuation, sources & uses, pro-forma financials, accretion/dilution, leverage, synergy NPV, and breakeven analysis
+- **Financial Health Snapshot** — liquidity, expense growth, cash runway, and revenue volatility scoring
+
+### Report Export (PDF / DOCX / XLSX)
+All three report types export to **PDF**, **DOCX**, and **XLSX** via the `/api/clients/[id]/reports/export` route. Exports use a semantic value-type formatting system (`currency`, `percentage`, `ratio`, `number`) with mapper-specified decimal precision, ensuring consistent number formatting across all output surfaces (web UI, PDF, DOCX, XLSX).
+
+### Document Request Workflow
+Create and manage document request lists per client. Each request tracks status and supports a **tokenized upload portal** — clients can upload documents via a secure, time-limited link without needing a Vaelo account.
+
+### Activity Timeline
+Per-client event timeline tracking key actions (report generation, document uploads, status changes).
+
+### New User Provisioning
+A database trigger (`handle_new_user`) automatically provisions a firm, CA profile, and team membership for every new signup, ensuring the application is immediately usable without manual setup.
+
+## Documentation
+
+- [`docs/Vaelo_SRS.md`](docs/Vaelo_SRS.md) — Software Requirements Specification
+- [`docs/vaelo-identity-system.html`](docs/vaelo-identity-system.html) — Identity system and design language reference
+
+## Setup
 
 ### 1. Environment Variables
 
-Create a `.env.local` file in the root of the repository based on the required environment variables. **Do not** commit your `.env.local` file.
+Create a `.env.local` file in the repository root. **Do not** commit this file.
 
-Required variables:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -45,24 +61,26 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 ### 2. Database Migrations
 
-The database schema, RLS policies, and enums are stored in timestamped `.sql` files within the `supabase/migrations/` directory.
+The database schema, RLS policies, triggers, and enums are stored as timestamped `.sql` files in `supabase/migrations/`.
 
-This repository does not use a Supabase CLI project link (no `config.toml`). To apply migrations, run the contents of each `.sql` file directly against your target Supabase project in filename/timestamp order. This can be done via the SQL Editor in the Supabase Dashboard, or by using an MCP-connected tool.
+This repository does **not** use a Supabase CLI project link (there is no `supabase/config.toml`). To apply migrations, execute each `.sql` file directly against your Supabase project **in filename/timestamp order**. This can be done via the SQL Editor in the Supabase Dashboard or through a Supabase MCP tool.
 
 ### 3. SMTP Configuration
 
-**Important:** Supabase's default email service has an aggressive rate limit that is unsuitable even for light testing. You must configure a custom SMTP provider (for example, Gmail via an App Password) in your Supabase dashboard (**Authentication → Settings → SMTP**) for the application to function correctly.
+Supabase's default email service has aggressive rate limits that are unsuitable even for light testing. You **must** configure a custom SMTP provider (e.g. Gmail via App Password) in your Supabase dashboard under **Authentication → Settings → SMTP** for auth emails to work reliably.
 
 ### 4. Running the Development Server
 
-First, install the required dependencies:
 ```bash
 npm install
-```
-
-Start the development server:
-```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 5. Running Tests
+
+```bash
+npm test          # interactive watch mode
+npx vitest run    # single run
+```
