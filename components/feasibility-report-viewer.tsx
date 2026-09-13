@@ -46,7 +46,7 @@ export function FeasibilityReportViewer({ clientId, result }: { clientId: string
                   {row.isCustom ? (
                     <span className="font-mono text-ink">{row.customValue}</span>
                   ) : (
-                    <AuditedValueDisplay data={row.value} valueType={row.valueType} />
+                    <AuditedValueDisplay data={row.value} valueType={row.valueType} currencyDecimals={row.currencyDecimals} />
                   )}
                 </div>
               ))}
@@ -96,3 +96,4 @@ export function FeasibilityReportViewer({ clientId, result }: { clientId: string
     </div>
   )
 }
+

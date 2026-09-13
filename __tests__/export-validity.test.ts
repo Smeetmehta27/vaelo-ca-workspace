@@ -1,8 +1,9 @@
 import { expect, test, describe } from 'vitest';
 import { mapFeasibilityReport } from '../lib/report-mappers/feasibility-mapper';
 import { mapFinancialHealthReport } from '../lib/report-mappers/financial-health-mapper';
+import { mapCMAReportSchedules } from '../lib/report-mappers/cma-mapper';
 import { DealFeasibilityReportResult } from '../lib/pipelines/feasibility';
-import { formatValue } from '../components/cma/utils';
+import { formatValue, formatCurrency } from '../components/cma/utils';
 
 describe('Feasibility Export Safety Test', () => {
   const mockReport: DealFeasibilityReportResult = {
@@ -91,6 +92,97 @@ describe('Feasibility Export Safety Test', () => {
     expect(formattedPct).not.toContain('NaN');
   });
 
+  test('CMA Mapper: Schedule 1 and Schedule 13 TOL/TNW historical calculations must perfectly match', () => {
+    // Generate empty mock projections
+        const projections = [1, 2, 3, 4, 5, 6].map(i => ({
+      revenue: 0,
+      ebitda: 0,
+      netProfit: 0,
+      currentRatio: 0,
+      debtEquityRatio: 0,
+      tolTnwRatio: 0,
+      dscr: 0,
+      wcGap: 0,
+      mpbf: 0,
+      totalAssets: { value: 0 },
+      totalLiabilitiesAndEquity: { value: 0 }
+    }));
+    
+    // Mock historical data mapping strictly to the user's scenario
+    const historical = {
+      revenue: 100,
+      cash: 10,
+      stock: 10,
+      debtors: 10,
+      otherCurrentAssets: 0,
+      fixedAssets: 0,
+      otherNonCurrentAssets: 0,
+      creditors: 1000000,
+      otherCurrentLiabilities: 0,
+      shortTermBorrowings: 2000000,
+      termLoans: 5000000,
+      otherNonCurrentLiabilities: 0,
+      equity: 1000000,
+      currentLiabilitiesExclBank: 0
+    };
+    
+    // Total Outside Liab = Creditors (10L) + ShortTerm (20L) + TermLoans (50L) = 80L
+    // Equity (TNW) = 10L
+    // TOL/TNW = 8.00
+    
+    const schedules = mapCMAReportSchedules(historical as any, projections as any);
+    
+    const sched1 = schedules.find(s => s.scheduleTitle.includes('Schedule 1'));
+    const sched13 = schedules.find(s => s.scheduleTitle.includes('Schedule 13'));
+    
+    const sched1TolTnw = sched1!.rows.find(r => r.label === 'TOL / TNW')!.historicalValue;
+    const sched13TolTnw = sched13!.rows.find(r => r.label === 'TOL / TNW')!.historicalValue;
+    
+    expect(sched1TolTnw).toBe(8);
+    expect(sched13TolTnw).toBe(8);
+    expect(sched1TolTnw).toEqual(sched13TolTnw);
+  });
+  test('formatValue should correctly respect currencyDecimals parameter', () => {
+    expect(formatValue(15.6, 'currency')).toBe('₹16'); // Default 0
+    expect(formatValue(15.6, 'currency', 0)).toBe('₹16');
+    expect(formatValue(15.6, 'currency', 2)).toBe('₹15.60');
+  });
+
+  test('formatValue should maintain 2-decimal default for percentage and ratio regardless of third argument', () => {
+    expect(formatValue(15.5, 'percentage', undefined)).toBe('15.50%');
+    expect(formatValue(1.31, 'ratio', undefined)).toBe('1.31');
+    // Ensure any arbitrary third argument is ignored
+    expect(formatValue(15.5, 'percentage', 0)).toBe('15.50%'); 
+    expect(formatValue(1.31, 'ratio', 0)).toBe('1.31');
+  });
+
+  test('formatCurrency should correctly respect decimals parameter (regression test)', () => {
+    expect(formatCurrency(15.6)).toBe('₹16'); // Default 0
+    expect(formatCurrency(15.6, 0)).toBe('₹16');
+    expect(formatCurrency(15.6, 2)).toBe('₹15.60');
+  });
+
+  test('Mappers should assign correct currencyDecimals (0 for CMA, 2 for Feasibility)', () => {
+    const feasibilityMapped = mapFeasibilityReport(mockReport);
+    expect(feasibilityMapped.schedules[0].rows[0].currencyDecimals).toBe(2);
+
+    const cmaMapped = mapCMAReportSchedules(null, []);
+    // Schedule 1 is Executive Summary, Schedule 2 is Assumptions, Schedule 3 is Balance Sheet
+    // Let's check a currency row on Schedule 3 (index 2)
+    const currencyRow = cmaMapped[2].rows.find(r => r.valueType === 'currency');
+    if (currencyRow) {
+      expect(currencyRow.currencyDecimals ?? 0).toBe(0);
+    }
+  });
+
+  test('mapCMAReportSchedules should always return "Schedule 1 — CMA Executive Summary" as the first element', () => {
+    const cmaMapped = mapCMAReportSchedules(null, []);
+
+    expect(cmaMapped.length).toBeGreaterThan(0);
+    expect(cmaMapped[0].scheduleTitle).toBe('Schedule 1 — CMA Executive Summary');
+    expect(cmaMapped[0].rows.length).toBeGreaterThan(0);
+  });
+
   test('Health mapper should assign correct valueTypes and produce valid outputs', () => {
     const mapped = mapFinancialHealthReport(healthReportMock as any);
 
@@ -126,3 +218,5 @@ describe('Feasibility Export Safety Test', () => {
   });
 
 });
+
+

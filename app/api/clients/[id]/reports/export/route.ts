@@ -136,7 +136,7 @@ export async function GET(
 
                 if (row.historicalValue !== undefined) {
                    const displayVal = typeof row.historicalValue === 'number'
-                     ? formatValue(row.historicalValue, row.valueType)
+                     ? formatValue(row.historicalValue, row.valueType, row.currencyDecimals)
                      : String(row.historicalValue);
                    cells.push(new TableCell({
                      children: [new Paragraph({ text: displayVal, alignment: AlignmentType.RIGHT })]
@@ -147,7 +147,7 @@ export async function GET(
                   row.projectedValues.forEach((val: any) => {
                      let displayVal = '-';
                      if (val && val.value !== undefined) {
-                       displayVal = formatValue(val.value, row.valueType);
+                       displayVal = formatValue(val.value, row.valueType, row.currencyDecimals);
                      }
                      cells.push(new TableCell({
                        children: [new Paragraph({ text: displayVal, alignment: AlignmentType.RIGHT })]
@@ -158,7 +158,7 @@ export async function GET(
                   if (rawVal && typeof rawVal === 'object' && 'value' in rawVal) {
                     rawVal = rawVal.value;
                   }
-                  const displayVal = row.isCustom ? row.customValue : formatValue(Number(rawVal), row.valueType);
+                  const displayVal = row.isCustom ? row.customValue : formatValue(Number(rawVal), row.valueType, row.currencyDecimals);
                   cells.push(new TableCell({
                     children: [new Paragraph({ text: displayVal, alignment: AlignmentType.RIGHT })]
                   }));
@@ -257,7 +257,11 @@ export async function GET(
         excelRow.eachCell((cell, colNumber) => {
           if (colNumber > 1 && typeof cell.value === 'number') {
             if (row.valueType === 'currency') {
-              cell.numFmt = '[$₹-en-IN]#,##0;[Red][$₹-en-IN]-#,##0';
+              if (row.currencyDecimals === 2) {
+                cell.numFmt = '[$₹-en-IN]#,##0.00;[Red][$₹-en-IN]-#,##0.00';
+              } else {
+                cell.numFmt = '[$₹-en-IN]#,##0;[Red][$₹-en-IN]-#,##0';
+              }
             } else if (row.valueType === 'percentage') {
               cell.numFmt = '0.00%';
               // Convert value to decimal for Excel percentage formatting if it's not already

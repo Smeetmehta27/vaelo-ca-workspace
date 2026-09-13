@@ -1,5 +1,5 @@
 import { CMAProjectedYear, CMAHistoricalInput, AuditedValue } from '../pipelines/cma';
-import { formatCurrency } from '@/components/cma/utils';
+
 
 export interface CMAScheduleRow {
   label: string;
@@ -9,6 +9,7 @@ export interface CMAScheduleRow {
   valueType?: import('@/components/cma/utils').ValueType;
   historicalValue?: string | number | null;
   projectedValues?: (AuditedValue | null | undefined)[];
+  currencyDecimals?: number;
 }
 
 export interface CMASchedule {
@@ -22,6 +23,42 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
   projections.forEach((_, i) => {
     cmaColumns.push(`Year ${i + 1}`);
   });
+
+  // Balance Sheet derived values for Executive Summary
+  const histCurrentAssets = historical ? historical.cash + historical.stock + historical.debtors + historical.otherCurrentAssets : 0;
+  const histTotalAssets = historical ? histCurrentAssets + historical.fixedAssets + historical.otherNonCurrentAssets : 0;
+  const histCurrentLiab = historical ? historical.creditors + historical.otherCurrentLiabilities + historical.shortTermBorrowings : 0;
+  const histTotalOutsideLiab = historical ? histCurrentLiab + historical.termLoans + historical.otherNonCurrentLiabilities : 0;
+  const histTotalLiabAndEq = historical ? histTotalOutsideLiab + historical.equity : 0;
+  const histDiff = histTotalAssets - histTotalLiabAndEq;
+  const histCurrentRatio = historical && histCurrentLiab > 0 ? (histCurrentAssets / histCurrentLiab) : '-';
+  const histDebtEquityRatio = historical ? (historical.equity > 0 ? ((historical.termLoans + historical.shortTermBorrowings) / historical.equity) : 'N/A') : '-';
+  const histTolTnwRatio = historical ? (historical.equity > 0 ? (histTotalOutsideLiab / historical.equity) : 'N/A') : '-';
+
+  // Schedule 1 — CMA Executive Summary
+  const execSummarySchedule: CMASchedule = {
+    scheduleTitle: "Schedule 1 — CMA Executive Summary",
+    columns: cmaColumns,
+    rows: [
+      { label: "Revenue", historicalValue: historical ? historical.revenue : "-", projectedValues: projections.map(p => p.revenue), valueType: 'currency', currencyDecimals: 0 },
+      { label: "EBITDA", historicalValue: "-", projectedValues: projections.map(p => p.ebitda), valueType: 'currency', currencyDecimals: 0 },
+      { label: "PAT", historicalValue: "-", projectedValues: projections.map(p => p.netProfit), valueType: 'currency', currencyDecimals: 0 },
+      
+      { label: "Ratios", isHeader: true, historicalValue: "", projectedValues: projections.map(() => undefined) },
+      { label: "Current Ratio", historicalValue: histCurrentRatio, projectedValues: projections.map(p => p.currentRatio), valueType: 'ratio' },
+      { label: "Total Debt / Equity", historicalValue: histDebtEquityRatio, projectedValues: projections.map(p => p.debtEquityRatio), valueType: 'ratio' },
+      { label: "TOL / TNW", historicalValue: histTolTnwRatio, projectedValues: projections.map(p => p.tolTnwRatio), valueType: 'ratio' },
+      { label: "DSCR", historicalValue: "-", projectedValues: projections.map(p => p.dscr), valueType: 'ratio' },
+
+      { label: "Working Capital Finance", isHeader: true, historicalValue: "", projectedValues: projections.map(() => undefined) },
+      { label: "MPBF Method 2", historicalValue: "-", projectedValues: projections.map(p => p.mpbfMethod2), valueType: 'currency', currencyDecimals: 0 },
+      { label: "Drawing Power", historicalValue: "-", projectedValues: projections.map(p => p.drawingPower), valueType: 'currency', currencyDecimals: 0 },
+      { label: "Sanctioned CC Limit", historicalValue: "-", projectedValues: projections.map(p => ({ value: p.drawingPower?.inputs?.sanctionedLimit ?? 0, formula: 'Sanctioned Limit', inputs: {} }) as AuditedValue), valueType: 'currency', currencyDecimals: 0 },
+      { label: "Closing CC Utilization", historicalValue: historical ? historical.shortTermBorrowings : '-', projectedValues: projections.map(p => p.shortTermBorrowings), valueType: 'currency', currencyDecimals: 0 },
+      { label: "Unfunded Cash Deficit", historicalValue: "-", projectedValues: projections.map(p => p.unfundedCashDeficit), valueType: 'currency', currencyDecimals: 0 },
+      { label: "Closing Cash", historicalValue: historical ? historical.cash : '-', projectedValues: projections.map(p => p.cash), valueType: 'currency', currencyDecimals: 0 },
+    ]
+  };
 
   // P&L
   const plSchedule: CMASchedule = {
@@ -42,13 +79,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
     ]
   };
 
-  // Balance Sheet
-  const histCurrentAssets = historical ? historical.cash + historical.stock + historical.debtors + historical.otherCurrentAssets : 0;
-  const histTotalAssets = historical ? histCurrentAssets + historical.fixedAssets + historical.otherNonCurrentAssets : 0;
-  
-  const histCurrentLiab = historical ? historical.creditors + historical.otherCurrentLiabilities + historical.shortTermBorrowings : 0;
-  const histTotalLiabAndEq = historical ? histCurrentLiab + historical.termLoans + historical.otherNonCurrentLiabilities + historical.equity : 0;
-  const histDiff = histTotalAssets - histTotalLiabAndEq;
+  // Balance Sheet (calcs moved up for Executive Summary)
 
   const balanceCheckVals = projections.map(p => {
     return {
@@ -95,7 +126,7 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
     rows: [
       { label: "Total Current Assets (TCA)", historicalValue: historical ? histCurrentAssets : "-", projectedValues: projections.map(p => p.totalCurrentAssets), valueType: 'currency' },
       { label: "Less: Current Liab. Excl. Bank", indent: true, historicalValue: historical ? historical.creditors + historical.otherCurrentLiabilities : "-", projectedValues: projections.map(p => p.currentLiabilitiesExclBank), valueType: 'currency' },
-      { label: "Working Capital Gap", isSubTotal: true, historicalValue: historical ? formatCurrency(histCurrentAssets - (historical.creditors + historical.otherCurrentLiabilities)) : '-', projectedValues: projections.map(p => p.workingCapitalGap), valueType: 'currency' },
+      { label: "Working Capital Gap", isSubTotal: true, historicalValue: historical ? histCurrentAssets - (historical.creditors + historical.otherCurrentLiabilities) : '-', projectedValues: projections.map(p => p.workingCapitalGap), valueType: 'currency' },
       { label: "Less: Short Term Borrowings", indent: true, historicalValue: historical ? historical.shortTermBorrowings : "-", projectedValues: projections.map(p => p.shortTermBorrowings), valueType: 'currency' },
       { label: "Net Working Capital (NWC)", isSubTotal: true, historicalValue: historical ? histNWC : "-", projectedValues: projections.map(p => p.netWorkingCapital), valueType: 'currency' },
     ]
@@ -108,8 +139,8 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
     columns: cmaColumns,
     rows: [
       { label: "Total Current Assets", historicalValue: historical ? histCurrentAssets : "-", projectedValues: projections.map(p => p.totalCurrentAssets), valueType: 'currency' },
-      { label: "Less: Current Liab. Excl. Bank", indent: true, historicalValue: historical ? formatCurrency(historical ? (historical.creditors + historical.otherCurrentLiabilities) : 0) : '-', projectedValues: projections.map(p => p.currentLiabilitiesExclBank), valueType: 'currency' },
-      { label: "Working Capital Gap", isSubTotal: true, historicalValue: historical ? formatCurrency(histCurrentAssets - (historical ? (historical.creditors + historical.otherCurrentLiabilities) : 0)) : '-', projectedValues: projections.map(p => p.workingCapitalGap), valueType: 'currency' },
+      { label: "Less: Current Liab. Excl. Bank", indent: true, historicalValue: historical ? (historical.creditors + historical.otherCurrentLiabilities) : '-', projectedValues: projections.map(p => p.currentLiabilitiesExclBank), valueType: 'currency' },
+      { label: "Working Capital Gap", isSubTotal: true, historicalValue: historical ? histCurrentAssets - (historical.creditors + historical.otherCurrentLiabilities) : '-', projectedValues: projections.map(p => p.workingCapitalGap), valueType: 'currency' },
       { label: "Less: Required Borrower Contribution (25% of TCA)", indent: true, historicalValue: historical ? histCurrentAssets * 0.25 : "-", projectedValues: projections.map(p => p.borrowersContribution), valueType: 'currency' },
       { label: "Maximum Permissible Bank Finance (MPBF)", isSubTotal: true, historicalValue: historical ? histMPBF : "-", projectedValues: projections.map(p => p.mpbfMethod2), valueType: 'currency' },
     ]
@@ -236,14 +267,15 @@ export function mapCMAReportSchedules(historical: CMAHistoricalInput | null, pro
     scheduleTitle: "Schedule 13 — Key Financial Ratios",
     columns: cmaColumns,
     rows: [
-      { label: "Current Ratio", historicalValue: historical ? (histCurrentLiab > 0 ? (histCurrentAssets / histCurrentLiab) : 'N/A') : '-', projectedValues: projections.map(p => p.currentRatio), valueType: 'ratio' },
-      { label: "Total Debt / Equity (TDE)", historicalValue: historical ? (historical.equity > 0 ? ((historical.termLoans + historical.shortTermBorrowings) / historical.equity) : 'N/A') : '-', projectedValues: projections.map(p => p.debtEquityRatio), valueType: 'ratio' },
-      { label: "TOL / TNW", historicalValue: historical ? (historical.equity > 0 ? (histTotalLiabAndEq / historical.equity) : 'N/A') : '-', projectedValues: projections.map(p => p.tolTnwRatio), valueType: 'ratio' },
+      { label: "Current Ratio", historicalValue: histCurrentRatio, projectedValues: projections.map(p => p.currentRatio), valueType: 'ratio' },
+      { label: "Total Debt / Equity (TDE)", historicalValue: histDebtEquityRatio, projectedValues: projections.map(p => p.debtEquityRatio), valueType: 'ratio' },
+      { label: "TOL / TNW", historicalValue: histTolTnwRatio, projectedValues: projections.map(p => p.tolTnwRatio), valueType: 'ratio' },
       { label: "DSCR (Debt Service Coverage Ratio)", historicalValue: "-", projectedValues: projections.map(p => p.dscr), valueType: 'ratio' },
     ]
   };
 
   return [
+    execSummarySchedule,
     plSchedule,
     bsSchedule,
     wcSchedule,

@@ -49,7 +49,7 @@ export function mapFinancialHealthReport(result: HealthSnapshotResult): HealthMa
       scoreLabel: revenueVolatility.label,
       note: revenueVolatility.note,
       rows: [
-        { label: 'Mean Revenue', value: revenueVolatility.meanRevenue, valueType: 'currency' },
+        { label: 'Mean Revenue', value: revenueVolatility.meanRevenue, valueType: 'currency', currencyDecimals: 2 },
         { label: 'Coefficient of Variation', value: revenueVolatility.coefficientOfVariation, isSubtotal: true, valueType: 'ratio' }
       ]
     }

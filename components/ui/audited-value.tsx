@@ -9,13 +9,13 @@ export type AuditedValueProps = {
   inputs: Record<string, number>;
 }
 
-export function AuditedValueDisplay({ data, valueType = 'number' }: { data: AuditedValueProps, valueType?: ValueType }) {
+export function AuditedValueDisplay({ data, valueType = 'number', currencyDecimals }: { data: AuditedValueProps, valueType?: ValueType, currencyDecimals?: number }) {
   const [expanded, setExpanded] = useState(false)
   const [position, setPosition] = useState<'bottom' | 'top'>('bottom')
   const containerRef = useRef<HTMLDivElement>(null)
 
   const formatOutput = (num: number) => {
-    return formatValue(num, valueType);
+    return formatValue(num, valueType, currencyDecimals);
   }
 
   const toggleExpand = () => {

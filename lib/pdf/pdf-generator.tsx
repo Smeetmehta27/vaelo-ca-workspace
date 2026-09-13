@@ -158,7 +158,7 @@ const ReportDocument = ({ clientName, reportType, generatedDate, schedules }: Pd
 
                 if (row.historicalValue !== undefined) {
                    const displayVal = typeof row.historicalValue === 'number'
-                     ? formatValue(row.historicalValue, row.valueType)
+                     ? formatValue(row.historicalValue, row.valueType, row.currencyDecimals)
                      : String(row.historicalValue);
                    dataCells.push(displayVal);
                 }
@@ -168,7 +168,7 @@ const ReportDocument = ({ clientName, reportType, generatedDate, schedules }: Pd
                   row.projectedValues.forEach((val: any) => {
                      let displayVal = '-';
                      if (val && val.value !== undefined) {
-                       displayVal = formatValue(val.value, row.valueType);
+                       displayVal = formatValue(val.value, row.valueType, row.currencyDecimals);
                      }
                      dataCells.push(displayVal);
                   });
@@ -180,7 +180,7 @@ const ReportDocument = ({ clientName, reportType, generatedDate, schedules }: Pd
                   
                   const displayVal = row.isCustom 
                       ? row.customValue 
-                      : formatValue(Number(rawVal), row.valueType);
+                      : formatValue(Number(rawVal), row.valueType, row.currencyDecimals);
                   dataCells.push(displayVal);
                 }
 

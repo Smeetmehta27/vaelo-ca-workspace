@@ -5,6 +5,7 @@ export interface ScheduleRow {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value?: any;
   valueType?: import('@/components/cma/utils').ValueType;
+  currencyDecimals?: number;
   isSubtotal?: boolean;
   isCustom?: boolean;
   customValue?: string;
@@ -45,7 +46,7 @@ export function mapFeasibilityReport(result: DealFeasibilityReportResult): Feasi
       scheduleTitle: 'Premium & Economics',
       columns: ['Value'],
       rows: [
-        { label: 'Target Standalone Value', value: premium.targetStandaloneValue, valueType: 'currency' },
+        { label: 'Target Standalone Value', value: premium.targetStandaloneValue, valueType: 'currency', currencyDecimals: 2 },
         { label: 'Purchase Price', customValue: `₹${premium.purchasePrice.toLocaleString()}`, isCustom: true },
         { label: 'Premium %', value: premium.premiumPct, isSubtotal: true, valueType: 'percentage' }
       ]
@@ -54,18 +55,18 @@ export function mapFeasibilityReport(result: DealFeasibilityReportResult): Feasi
       scheduleTitle: 'Sources & Uses (Cash)',
       columns: ['Value'],
       rows: [
-        { label: 'Cash Needed', value: sourcesAndUses.cashNeeded, valueType: 'currency' },
-        { label: 'Cash Sources (Debt + Acquirer Cash)', value: sourcesAndUses.cashSources, valueType: 'currency' },
-        { label: 'Funding Gap', value: sourcesAndUses.cashFundingGap, valueType: 'currency', isSubtotal: true }
+        { label: 'Cash Needed', value: sourcesAndUses.cashNeeded, valueType: 'currency', currencyDecimals: 2 },
+        { label: 'Cash Sources (Debt + Acquirer Cash)', value: sourcesAndUses.cashSources, valueType: 'currency', currencyDecimals: 2 },
+        { label: 'Funding Gap', value: sourcesAndUses.cashFundingGap, valueType: 'currency', currencyDecimals: 2, isSubtotal: true }
       ]
     },
     {
       scheduleTitle: 'Pro-Forma Combined (Day 1)',
       columns: ['Value'],
       rows: [
-        { label: 'Combined Revenue', value: proForma.combinedRevenue, valueType: 'currency' },
-        { label: 'Combined EBITDA', value: proForma.combinedEbitdaPreSynergy, valueType: 'currency' },
-        { label: 'Pro-Forma Net Income', value: proForma.combinedNetIncomePreSynergy, valueType: 'currency', isSubtotal: true }
+        { label: 'Combined Revenue', value: proForma.combinedRevenue, valueType: 'currency', currencyDecimals: 2 },
+        { label: 'Combined EBITDA', value: proForma.combinedEbitdaPreSynergy, valueType: 'currency', currencyDecimals: 2 },
+        { label: 'Pro-Forma Net Income', value: proForma.combinedNetIncomePreSynergy, valueType: 'currency', currencyDecimals: 2, isSubtotal: true }
       ]
     },
     {

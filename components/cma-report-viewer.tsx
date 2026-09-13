@@ -4,7 +4,6 @@ import { VaeloMark } from '@/components/ui/vaelo-mark'
 
 import { useState } from 'react'
 import { CMAProjectedYear, CMAHistoricalInput, CMAScenario } from '@/lib/pipelines/cma'
-import { CMAExecutiveSummary } from './cma/cma-executive-summary'
 import { CMAScenarioComparison } from './cma/cma-scenario-comparison'
 import { ScheduleLayout, ScheduleRow } from './cma/schedule-layout'
 import { mapCMAReportSchedules } from '@/lib/report-mappers/cma-mapper'
@@ -119,9 +118,7 @@ export function CMAReportViewer({ clientId, historical = null, projections, repo
         </div>
       ) : (
         <>
-          <CMAExecutiveSummary historical={historical} projections={activeProjections} />
-          
-          {schedules.slice(0, 2).map((s, idx) => (
+          {schedules.slice(0, 3).map((s, idx) => (
             <ScheduleLayout key={idx} title={s.scheduleTitle} historical={historical} projections={activeProjections}>
               {s.rows.map((row, rIdx) => (
                 <ScheduleRow
@@ -133,6 +130,7 @@ export function CMAReportViewer({ clientId, historical = null, projections, repo
                   valueType={row.valueType}
                   historicalValue={row.historicalValue}
                   projectedValues={row.projectedValues}
+                  currencyDecimals={row.currencyDecimals}
                 />
               ))}
             </ScheduleLayout>
@@ -140,7 +138,7 @@ export function CMAReportViewer({ clientId, historical = null, projections, repo
           
           <div className="my-8 border-t border-stone-line pt-8">
             <h2 className="text-2xl font-serif text-ink mb-6">Working Capital & Financing</h2>
-            {schedules.slice(2, 6).map((s, idx) => (
+            {schedules.slice(3, 7).map((s, idx) => (
               <ScheduleLayout key={idx} title={s.scheduleTitle} historical={historical} projections={activeProjections}>
                 {s.rows.map((row, rIdx) => (
                   <ScheduleRow
@@ -152,6 +150,7 @@ export function CMAReportViewer({ clientId, historical = null, projections, repo
                     valueType={row.valueType}
                     historicalValue={row.historicalValue}
                     projectedValues={row.projectedValues}
+                    currencyDecimals={row.currencyDecimals}
                   />
                 ))}
               </ScheduleLayout>
@@ -160,7 +159,7 @@ export function CMAReportViewer({ clientId, historical = null, projections, repo
 
           <div className="my-8 border-t border-stone-line pt-8">
             <h2 className="text-2xl font-serif text-ink mb-6">Cash Flow & Fixed Assets</h2>
-            {schedules.slice(6, 9).map((s, idx) => (
+            {schedules.slice(7, 10).map((s, idx) => (
               <ScheduleLayout key={idx} title={s.scheduleTitle} historical={historical} projections={activeProjections}>
                 {s.rows.map((row, rIdx) => (
                   <ScheduleRow
@@ -172,6 +171,7 @@ export function CMAReportViewer({ clientId, historical = null, projections, repo
                     valueType={row.valueType}
                     historicalValue={row.historicalValue}
                     projectedValues={row.projectedValues}
+                    currencyDecimals={row.currencyDecimals}
                   />
                 ))}
               </ScheduleLayout>
@@ -180,7 +180,7 @@ export function CMAReportViewer({ clientId, historical = null, projections, repo
 
           <div className="my-8 border-t border-stone-line pt-8">
             <h2 className="text-2xl font-serif text-ink mb-6">Long-Term Debt, Equity & Ratios</h2>
-            {schedules.slice(9, 12).map((s, idx) => (
+            {schedules.slice(10, 14).map((s, idx) => (
               <ScheduleLayout key={idx} title={s.scheduleTitle} historical={historical} projections={activeProjections}>
                 {s.rows.map((row, rIdx) => (
                   <ScheduleRow
@@ -192,6 +192,7 @@ export function CMAReportViewer({ clientId, historical = null, projections, repo
                     valueType={row.valueType}
                     historicalValue={row.historicalValue}
                     projectedValues={row.projectedValues}
+                    currencyDecimals={row.currencyDecimals}
                   />
                 ))}
               </ScheduleLayout>

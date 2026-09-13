@@ -8,12 +8,13 @@ export interface CMAScheduleProps {
   projections: CMAProjectedYear[];
 }
 
-export function formatCurrency(value: number | undefined | null): string {
+export function formatCurrency(value: number | undefined | null, decimals = 0): string {
   if (value === undefined || value === null) return '-';
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
-    maximumFractionDigits: 0
+    maximumFractionDigits: decimals,
+    minimumFractionDigits: decimals
   }).format(value);
 }
 
@@ -34,16 +35,16 @@ export function formatPercentage(value: number | undefined | null, decimals = 2)
   }).format(value / 100);
 }
 
-export function formatValue(value: number | undefined | null, type: ValueType = 'number', decimals = 2): string {
+export function formatValue(value: number | undefined | null, type: ValueType = 'number', currencyDecimals?: number): string {
   if (value === undefined || value === null) return '-';
   switch (type) {
     case 'currency':
-      return formatCurrency(value);
+      return formatCurrency(value, currencyDecimals !== undefined ? currencyDecimals : 0);
     case 'percentage':
-      return formatPercentage(value, decimals);
+      return formatPercentage(value, 2);
     case 'ratio':
     case 'number':
-      return formatNumber(value, decimals);
+      return formatNumber(value, 2);
     case 'text':
       return String(value);
     default:

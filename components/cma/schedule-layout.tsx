@@ -48,7 +48,8 @@ export function ScheduleRow({
   indent = false,
   historicalValue,
   projectedValues,
-  valueType
+  valueType,
+  currencyDecimals
 }: {
   label: string,
   isHeader?: boolean,
@@ -56,7 +57,8 @@ export function ScheduleRow({
   indent?: boolean,
   historicalValue?: string | number | null,
   projectedValues?: (AuditedValue | null | undefined)[],
-  valueType?: ValueType
+  valueType?: ValueType,
+  currencyDecimals?: number
 }) {
   const rowClass = isHeader 
     ? 'bg-paper-dim font-bold text-ink' 
@@ -72,13 +74,13 @@ export function ScheduleRow({
       {historicalValue !== undefined && (
         <td className="px-6 py-4 text-right font-mono font-medium text-ink-soft bg-paper-dim/50">
           {typeof historicalValue === 'number' 
-            ? formatValue(historicalValue, valueType)
+            ? formatValue(historicalValue, valueType, currencyDecimals)
             : historicalValue}
         </td>
       )}
       {projectedValues?.map((val, i) => (
         <td key={i} className="px-6 py-4 text-right">
-          {val ? <AuditedValueDisplay data={val} valueType={valueType} /> : '-'}
+          {val ? <AuditedValueDisplay data={val} valueType={valueType} currencyDecimals={currencyDecimals} /> : '-'}
         </td>
       ))}
     </tr>
