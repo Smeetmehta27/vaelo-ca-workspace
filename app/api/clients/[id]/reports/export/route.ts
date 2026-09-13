@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase/server';
 import { mapCMAReportSchedules } from '@/lib/report-mappers/cma-mapper';
 import { mapFeasibilityReport } from '@/lib/report-mappers/feasibility-mapper';
 import { mapFinancialHealthReport } from '@/lib/report-mappers/financial-health-mapper';
@@ -27,7 +27,11 @@ export async function GET(
     return NextResponse.json({ error: 'Invalid or missing format (docx, xlsx, pdf)' }, { status: 400 });
   }
 
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   // Validate Auth / RLS (Querying client's report will naturally fail if unauthorized)
   const { data: client, error: clientError } = await supabase
