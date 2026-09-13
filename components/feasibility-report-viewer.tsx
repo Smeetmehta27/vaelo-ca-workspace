@@ -46,7 +46,7 @@ export function FeasibilityReportViewer({ clientId, result }: { clientId: string
                   {row.isCustom ? (
                     <span className="font-mono text-ink">{row.customValue}</span>
                   ) : (
-                    <AuditedValueDisplay data={row.value} isCurrency={row.isCurrency} />
+                    <AuditedValueDisplay data={row.value} valueType={row.valueType} />
                   )}
                 </div>
               ))}
@@ -64,7 +64,7 @@ export function FeasibilityReportViewer({ clientId, result }: { clientId: string
               <h5 className="font-serif text-ink-soft border-b border-stone-line pb-1">Leverage Check</h5>
               <div className="flex justify-between items-center">
                 <span className="text-ink-soft">Pro-Forma Net Debt</span>
-                <AuditedValueDisplay data={leverage.proFormaNetDebt} isCurrency={true} />
+                <AuditedValueDisplay data={leverage.proFormaNetDebt} valueType='currency' />
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-ink-soft">Leverage Ratio</span>
@@ -79,11 +79,11 @@ export function FeasibilityReportViewer({ clientId, result }: { clientId: string
               <h5 className="font-serif text-ink-soft border-b border-stone-line pb-1">Synergy NPV & Breakeven</h5>
               <div className="flex justify-between items-center">
                 <span className="text-ink-soft">Total Synergy NPV</span>
-                <AuditedValueDisplay data={synergy.totalSynergyNpv} isCurrency={true} />
+                <AuditedValueDisplay data={synergy.totalSynergyNpv} valueType='currency' />
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-ink-soft">Breakeven Synergy Required (After-Tax)</span>
-                <AuditedValueDisplay data={breakeven.breakevenAfterTaxSynergyRequired} isCurrency={true} />
+                <AuditedValueDisplay data={breakeven.breakevenAfterTaxSynergyRequired} valueType='currency' />
               </div>
               {breakeven.note && (
                 <p className="text-xs text-ink-soft mt-1 italic">{breakeven.note}</p>

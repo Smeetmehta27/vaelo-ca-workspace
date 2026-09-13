@@ -1,11 +1,11 @@
-import { CMAScheduleProps, formatCurrency, formatNumber } from './utils'
+import { CMAScheduleProps, formatValue } from './utils'
 import { ScheduleLayout, ScheduleRow } from './schedule-layout'
 
 export function CMAExecutiveSummary({ historical, projections }: CMAScheduleProps) {
   // We can calculate historical EBITDA and PAT if needed, but the historical input doesn't provide tax or depreciation.
   // We will display what we can.
-  const histRevenue = historical ? formatCurrency(historical.revenue) : '-';
-  const histCurrentRatio = historical ? formatNumber((historical.stock + historical.debtors + historical.cash + historical.otherCurrentAssets) / (historical.creditors + historical.otherCurrentLiabilities + historical.shortTermBorrowings)) : '-';
+  const histRevenue = historical ? formatValue(historical.revenue) : '-';
+  const histCurrentRatio = historical ? formatValue((historical.stock + historical.debtors + historical.cash + historical.otherCurrentAssets) / (historical.creditors + historical.otherCurrentLiabilities + historical.shortTermBorrowings)) : '-';
 
   return (
     <ScheduleLayout title="Schedule 1 — CMA Executive Summary" historical={historical} projections={projections}>
@@ -30,25 +30,25 @@ export function CMAExecutiveSummary({ historical, projections }: CMAScheduleProp
         label="Current Ratio" 
         historicalValue={histCurrentRatio} 
         projectedValues={projections.map(p => p.currentRatio)} 
-        isCurrency={false}
+        valueType='ratio'
       />
       <ScheduleRow 
         label="Total Debt / Equity" 
-        historicalValue={historical ? formatNumber((historical.termLoans + historical.shortTermBorrowings) / historical.equity) : '-'} 
+        historicalValue={historical ? formatValue((historical.termLoans + historical.shortTermBorrowings) / historical.equity) : '-'} 
         projectedValues={projections.map(p => p.debtEquityRatio)} 
-        isCurrency={false}
+        valueType='ratio'
       />
       <ScheduleRow 
         label="TOL / TNW" 
-        historicalValue={historical ? formatNumber((historical.termLoans + historical.shortTermBorrowings + historical.creditors + historical.otherCurrentLiabilities + historical.otherNonCurrentLiabilities) / historical.equity) : '-'} 
+        historicalValue={historical ? formatValue((historical.termLoans + historical.shortTermBorrowings + historical.creditors + historical.otherCurrentLiabilities + historical.otherNonCurrentLiabilities) / historical.equity) : '-'} 
         projectedValues={projections.map(p => p.tolTnwRatio)} 
-        isCurrency={false}
+        valueType='ratio'
       />
       <ScheduleRow 
         label="DSCR" 
         historicalValue="-" 
         projectedValues={projections.map(p => p.dscr)} 
-        isCurrency={false}
+        valueType='ratio'
       />
 
       <ScheduleRow label="Working Capital Finance" isHeader={true} historicalValue="" projectedValues={projections.map(() => undefined)} />
@@ -69,7 +69,7 @@ export function CMAExecutiveSummary({ historical, projections }: CMAScheduleProp
       />
       <ScheduleRow 
         label="Closing CC Utilization" 
-        historicalValue={historical ? formatCurrency(historical.shortTermBorrowings) : '-'} 
+        historicalValue={historical ? formatValue(historical.shortTermBorrowings) : '-'} 
         projectedValues={projections.map(p => p.shortTermBorrowings)} 
       />
       <ScheduleRow 
@@ -79,7 +79,7 @@ export function CMAExecutiveSummary({ historical, projections }: CMAScheduleProp
       />
       <ScheduleRow 
         label="Closing Cash" 
-        historicalValue={historical ? formatCurrency(historical.cash) : '-'} 
+        historicalValue={historical ? formatValue(historical.cash) : '-'} 
         projectedValues={projections.map(p => p.cash)} 
       />
     </ScheduleLayout>

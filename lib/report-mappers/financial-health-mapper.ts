@@ -17,7 +17,7 @@ export function mapFinancialHealthReport(result: HealthSnapshotResult): HealthMa
       scoreLabel: liquidity.label,
       note: liquidity.note,
       rows: [
-        { label: 'Current Ratio', value: liquidity.currentRatio }
+        { label: 'Current Ratio', value: liquidity.currentRatio, valueType: 'ratio' }
       ]
     },
     {
@@ -27,9 +27,9 @@ export function mapFinancialHealthReport(result: HealthSnapshotResult): HealthMa
       scoreLabel: expenseGrowth.label,
       note: expenseGrowth.note,
       rows: [
-        { label: 'Revenue Growth', value: expenseGrowth.revenueGrowthPct },
-        { label: 'Expense Growth', value: expenseGrowth.expenseGrowthPct },
-        { label: 'Spread', value: expenseGrowth.spreadPct, isSubtotal: true }
+        { label: 'Revenue Growth', value: expenseGrowth.revenueGrowthPct, valueType: 'percentage' },
+        { label: 'Expense Growth', value: expenseGrowth.expenseGrowthPct, valueType: 'percentage' },
+        { label: 'Spread', value: expenseGrowth.spreadPct, isSubtotal: true, valueType: 'percentage' }
       ]
     },
     {
@@ -39,7 +39,7 @@ export function mapFinancialHealthReport(result: HealthSnapshotResult): HealthMa
       scoreLabel: cashRunway.label,
       note: cashRunway.note,
       rows: [
-        { label: 'Months of Runway', value: cashRunway.runwayMonths }
+        { label: 'Months of Runway', value: cashRunway.runwayMonths, valueType: 'number' }
       ]
     },
     {
@@ -49,8 +49,8 @@ export function mapFinancialHealthReport(result: HealthSnapshotResult): HealthMa
       scoreLabel: revenueVolatility.label,
       note: revenueVolatility.note,
       rows: [
-        { label: 'Mean Revenue', value: revenueVolatility.meanRevenue, isCurrency: true },
-        { label: 'Coefficient of Variation', value: revenueVolatility.coefficientOfVariation, isSubtotal: true }
+        { label: 'Mean Revenue', value: revenueVolatility.meanRevenue, valueType: 'currency' },
+        { label: 'Coefficient of Variation', value: revenueVolatility.coefficientOfVariation, isSubtotal: true, valueType: 'ratio' }
       ]
     }
   ];

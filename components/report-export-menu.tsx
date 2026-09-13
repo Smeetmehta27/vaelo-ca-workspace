@@ -25,12 +25,8 @@ export function ReportExportMenu({ clientId, reportType, hasReport }: ReportExpo
 
   if (!hasReport) return null;
 
-  const handlePrint = () => {
-    setIsOpen(false);
-    window.print();
-  };
 
-  const getExportUrl = (format: 'docx' | 'xlsx') => {
+  const getExportUrl = (format: 'docx' | 'xlsx' | 'pdf') => {
     return `/api/clients/${clientId}/reports/export?type=${reportType}&format=${format}`;
   };
 
@@ -46,12 +42,13 @@ export function ReportExportMenu({ clientId, reportType, hasReport }: ReportExpo
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-paper ring-1 ring-stone-line focus:outline-none z-50">
           <div className="py-1">
-            <button
-              onClick={handlePrint}
-              className="w-full text-left px-4 py-2 text-sm text-ink hover:bg-paper-dim"
+            <a
+              href={getExportUrl('pdf')}
+              onClick={() => setIsOpen(false)}
+              className="block px-4 py-2 text-sm text-ink hover:bg-paper-dim"
             >
               Download as PDF
-            </button>
+            </a>
             <a
               href={getExportUrl('docx')}
               onClick={() => setIsOpen(false)}

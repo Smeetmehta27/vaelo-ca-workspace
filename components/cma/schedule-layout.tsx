@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { CMAScheduleProps } from './utils'
+import { CMAScheduleProps, formatValue, ValueType } from './utils'
 import { AuditedValueDisplay } from '../ui/audited-value'
 import { AuditedValue } from '@/lib/pipelines/cma'
 
@@ -48,7 +48,7 @@ export function ScheduleRow({
   indent = false,
   historicalValue,
   projectedValues,
-  isCurrency = true
+  valueType
 }: {
   label: string,
   isHeader?: boolean,
@@ -56,7 +56,7 @@ export function ScheduleRow({
   indent?: boolean,
   historicalValue?: string | number | null,
   projectedValues?: (AuditedValue | null | undefined)[],
-  isCurrency?: boolean
+  valueType?: ValueType
 }) {
   const rowClass = isHeader 
     ? 'bg-paper-dim font-bold text-ink' 
@@ -71,12 +71,14 @@ export function ScheduleRow({
       <td className={`px-6 py-4 text-sm ${labelClass}`}>{label}</td>
       {historicalValue !== undefined && (
         <td className="px-6 py-4 text-right font-mono font-medium text-ink-soft bg-paper-dim/50">
-          {historicalValue}
+          {typeof historicalValue === 'number' 
+            ? formatValue(historicalValue, valueType)
+            : historicalValue}
         </td>
       )}
       {projectedValues?.map((val, i) => (
         <td key={i} className="px-6 py-4 text-right">
-          {val ? <AuditedValueDisplay data={val} isCurrency={isCurrency} /> : '-'}
+          {val ? <AuditedValueDisplay data={val} valueType={valueType} /> : '-'}
         </td>
       ))}
     </tr>

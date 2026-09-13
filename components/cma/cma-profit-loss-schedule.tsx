@@ -1,4 +1,4 @@
-import { CMAScheduleProps, formatCurrency } from './utils'
+import { CMAScheduleProps, formatValue } from './utils'
 import { ScheduleLayout, ScheduleRow } from './schedule-layout'
 
 export function CMAProfitLossSchedule({ historical, projections }: CMAScheduleProps) {
@@ -6,31 +6,31 @@ export function CMAProfitLossSchedule({ historical, projections }: CMASchedulePr
     <ScheduleLayout title="Schedule 2 — Operating Statement / P&L" historical={historical} projections={projections}>
       <ScheduleRow 
         label="Revenue" 
-        historicalValue={historical ? formatCurrency(historical.revenue) : '-'} 
+        historicalValue={historical ? formatValue(historical.revenue) : '-'} 
         projectedValues={projections.map(p => p.revenue)} 
       />
       <ScheduleRow 
         label="Less: COGS" 
         indent={true}
-        historicalValue={historical ? formatCurrency(historical.cogs) : '-'} 
+        historicalValue={historical ? formatValue(historical.cogs) : '-'} 
         projectedValues={projections.map(p => p.cogs)} 
       />
       <ScheduleRow 
         label="Gross Profit" 
         isSubTotal={true}
-        historicalValue={historical ? formatCurrency(historical.revenue - historical.cogs) : '-'} 
+        historicalValue={historical ? formatValue(historical.revenue - historical.cogs) : '-'} 
         projectedValues={projections.map(p => p.grossProfit)} 
       />
       <ScheduleRow 
         label="Less: Operating Expenses" 
         indent={true}
-        historicalValue={historical ? formatCurrency(historical.operatingExpenses) : '-'} 
+        historicalValue={historical ? formatValue(historical.operatingExpenses) : '-'} 
         projectedValues={projections.map(p => p.operatingExpenses)} 
       />
       <ScheduleRow 
         label="EBITDA" 
         isSubTotal={true}
-        historicalValue={historical ? formatCurrency(historical.revenue - historical.cogs - historical.operatingExpenses) : '-'} 
+        historicalValue={historical ? formatValue(historical.revenue - historical.cogs - historical.operatingExpenses) : '-'} 
         projectedValues={projections.map(p => p.ebitda)} 
       />
       <ScheduleRow 

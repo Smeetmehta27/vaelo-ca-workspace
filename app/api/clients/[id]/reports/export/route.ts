@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
 import { mapCMAReportSchedules } from '@/lib/report-mappers/cma-mapper';
 import { mapFeasibilityReport } from '@/lib/report-mappers/feasibility-mapper';
 import { mapFinancialHealthReport } from '@/lib/report-mappers/financial-health-mapper';
+import { formatValue } from '@/components/cma/utils';
 import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, HeadingLevel, AlignmentType } from 'docx';
 import ExcelJS from 'exceljs';
 import { CMAHistoricalInput, CMAProjectedYear } from '@/lib/pipelines/cma';
+import { generateReportPDF } from '@/lib/pdf/pdf-generator';
 
 export async function GET(
   request: NextRequest,
@@ -21,11 +23,11 @@ export async function GET(
     return NextResponse.json({ error: 'Invalid or missing report type' }, { status: 400 });
   }
 
-  if (!format || !['docx', 'xlsx'].includes(format)) {
-    return NextResponse.json({ error: 'Invalid or missing format (docx, xlsx)' }, { status: 400 });
+  if (!format || !['docx', 'xlsx', 'pdf'].includes(format)) {
+    return NextResponse.json({ error: 'Invalid or missing format (docx, xlsx, pdf)' }, { status: 400 });
   }
 
-  const supabase = createClient();
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
   // Validate Auth / RLS (Querying client's report will naturally fail if unauthorized)
   const { data: client, error: clientError } = await supabase
@@ -129,8 +131,11 @@ export async function GET(
                 ];
 
                 if (row.historicalValue !== undefined) {
+                   const displayVal = typeof row.historicalValue === 'number'
+                     ? formatValue(row.historicalValue, row.valueType)
+                     : String(row.historicalValue);
                    cells.push(new TableCell({
-                     children: [new Paragraph({ text: String(row.historicalValue), alignment: AlignmentType.RIGHT })]
+                     children: [new Paragraph({ text: displayVal, alignment: AlignmentType.RIGHT })]
                    }));
                 }
 
@@ -138,14 +143,18 @@ export async function GET(
                   row.projectedValues.forEach((val: any) => {
                      let displayVal = '-';
                      if (val && val.value !== undefined) {
-                       displayVal = row.isCurrency ? `₹${val.value.toLocaleString()}` : String(val.value);
+                       displayVal = formatValue(val.value, row.valueType);
                      }
                      cells.push(new TableCell({
                        children: [new Paragraph({ text: displayVal, alignment: AlignmentType.RIGHT })]
                      }));
                   });
                 } else if (row.value !== undefined) {
-                  const displayVal = row.isCustom ? row.customValue : (row.isCurrency ? `₹${Number(row.value).toLocaleString()}` : String(row.value));
+                  let rawVal = row.value;
+                  if (rawVal && typeof rawVal === 'object' && 'value' in rawVal) {
+                    rawVal = rawVal.value;
+                  }
+                  const displayVal = row.isCustom ? row.customValue : formatValue(Number(rawVal), row.valueType);
                   cells.push(new TableCell({
                     children: [new Paragraph({ text: displayVal, alignment: AlignmentType.RIGHT })]
                   }));
@@ -224,7 +233,11 @@ export async function GET(
             }
           });
         } else if (row.value !== undefined) {
-           rowData.push(row.value);
+           let rawVal = row.value;
+           if (rawVal && typeof rawVal === 'object' && 'value' in rawVal) {
+             rawVal = rawVal.value;
+           }
+           rowData.push(rawVal);
         } else if (row.customValue !== undefined) {
            rowData.push(row.customValue);
         }
@@ -239,7 +252,15 @@ export async function GET(
         // Format numeric cells
         excelRow.eachCell((cell, colNumber) => {
           if (colNumber > 1 && typeof cell.value === 'number') {
-            cell.numFmt = '#,##0.00';
+            if (row.valueType === 'currency') {
+              cell.numFmt = '[$₹-en-IN]#,##0;[Red][$₹-en-IN]-#,##0';
+            } else if (row.valueType === 'percentage') {
+              cell.numFmt = '0.00%';
+              // Convert value to decimal for Excel percentage formatting if it's not already
+              cell.value = (cell.value as number) / 100;
+            } else {
+              cell.numFmt = '0.00';
+            }
           }
         });
 
@@ -258,6 +279,21 @@ export async function GET(
     return new NextResponse(buffer, {
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Disposition': `attachment; filename="${filename}"`
+      }
+    });
+
+  } else if (format === 'pdf') {
+    const pdfBuffer = await generateReportPDF({
+      clientName: client.company_name,
+      reportType: reportType,
+      generatedDate: generatedDate,
+      schedules: schedules
+    });
+    
+    return new NextResponse(pdfBuffer as unknown as BodyInit, {
+      headers: {
+        'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="${filename}"`
       }
     });

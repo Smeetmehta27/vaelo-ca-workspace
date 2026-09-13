@@ -130,7 +130,7 @@ export function CMAReportViewer({ clientId, historical = null, projections, repo
                   isHeader={row.isHeader}
                   isSubTotal={row.isSubTotal}
                   indent={row.indent}
-                  isCurrency={row.isCurrency}
+                  valueType={row.valueType}
                   historicalValue={row.historicalValue}
                   projectedValues={row.projectedValues}
                 />
@@ -149,7 +149,7 @@ export function CMAReportViewer({ clientId, historical = null, projections, repo
                     isHeader={row.isHeader}
                     isSubTotal={row.isSubTotal}
                     indent={row.indent}
-                    isCurrency={row.isCurrency}
+                    valueType={row.valueType}
                     historicalValue={row.historicalValue}
                     projectedValues={row.projectedValues}
                   />
@@ -169,7 +169,7 @@ export function CMAReportViewer({ clientId, historical = null, projections, repo
                     isHeader={row.isHeader}
                     isSubTotal={row.isSubTotal}
                     indent={row.indent}
-                    isCurrency={row.isCurrency}
+                    valueType={row.valueType}
                     historicalValue={row.historicalValue}
                     projectedValues={row.projectedValues}
                   />
@@ -189,7 +189,7 @@ export function CMAReportViewer({ clientId, historical = null, projections, repo
                     isHeader={row.isHeader}
                     isSubTotal={row.isSubTotal}
                     indent={row.indent}
-                    isCurrency={row.isCurrency}
+                    valueType={row.valueType}
                     historicalValue={row.historicalValue}
                     projectedValues={row.projectedValues}
                   />

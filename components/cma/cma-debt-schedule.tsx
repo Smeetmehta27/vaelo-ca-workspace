@@ -1,4 +1,4 @@
-import { CMAScheduleProps, formatCurrency } from './utils'
+import { CMAScheduleProps, formatValue } from './utils'
 import { ScheduleLayout, ScheduleRow } from './schedule-layout'
 import { AuditedValue } from '@/lib/pipelines/cma'
 
@@ -11,7 +11,7 @@ export function CMADebtSchedule({ historical, projections }: CMAScheduleProps) {
         formula: 'assump.principalRepayment',
         inputs: {}
       } as AuditedValue))} />
-      <ScheduleRow label="Closing Term Loan Balance" isSubTotal={true} historicalValue={historical ? formatCurrency(historical.termLoans) : '-'} projectedValues={projections.map(p => p.termLoans)} />
+      <ScheduleRow label="Closing Term Loan Balance" isSubTotal={true} historicalValue={historical ? formatValue(historical.termLoans) : '-'} projectedValues={projections.map(p => p.termLoans)} />
       
       <ScheduleRow label="Term Loan Interest Expense" historicalValue="-" projectedValues={projections.map(p => p.termLoanInterest)} />
     </ScheduleLayout>

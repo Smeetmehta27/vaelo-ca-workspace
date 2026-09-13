@@ -1,4 +1,4 @@
-import { CMAScheduleProps, formatCurrency } from './utils'
+import { CMAScheduleProps, formatValue } from './utils'
 import { ScheduleLayout, ScheduleRow } from './schedule-layout'
 import { AuditedValue } from '@/lib/pipelines/cma'
 
@@ -26,28 +26,28 @@ export function CMABalanceSheetSchedule({ historical, projections }: CMASchedule
   return (
     <ScheduleLayout title="Schedule 3 — Balance Sheet" historical={historical} projections={projections}>
       <ScheduleRow label="ASSETS" isHeader={true} />
-      <ScheduleRow label="Cash & Equivalents" indent={true} historicalValue={historical ? formatCurrency(historical.cash) : '-'} projectedValues={projections.map(p => p.cash)} />
-      <ScheduleRow label="Stock / Inventory" indent={true} historicalValue={historical ? formatCurrency(historical.stock) : '-'} projectedValues={projections.map(p => p.stock)} />
-      <ScheduleRow label="Debtors / Receivables" indent={true} historicalValue={historical ? formatCurrency(historical.debtors) : '-'} projectedValues={projections.map(p => p.debtors)} />
-      <ScheduleRow label="Other Current Assets" indent={true} historicalValue={historical ? formatCurrency(historical.otherCurrentAssets) : '-'} projectedValues={projections.map(p => p.otherCurrentAssets)} />
-      <ScheduleRow label="Total Current Assets" isSubTotal={true} historicalValue={historical ? formatCurrency(histCurrentAssets) : '-'} projectedValues={projections.map(p => p.totalCurrentAssets)} />
+      <ScheduleRow label="Cash & Equivalents" indent={true} historicalValue={historical ? formatValue(historical.cash) : '-'} projectedValues={projections.map(p => p.cash)} />
+      <ScheduleRow label="Stock / Inventory" indent={true} historicalValue={historical ? formatValue(historical.stock) : '-'} projectedValues={projections.map(p => p.stock)} />
+      <ScheduleRow label="Debtors / Receivables" indent={true} historicalValue={historical ? formatValue(historical.debtors) : '-'} projectedValues={projections.map(p => p.debtors)} />
+      <ScheduleRow label="Other Current Assets" indent={true} historicalValue={historical ? formatValue(historical.otherCurrentAssets) : '-'} projectedValues={projections.map(p => p.otherCurrentAssets)} />
+      <ScheduleRow label="Total Current Assets" isSubTotal={true} historicalValue={historical ? formatValue(histCurrentAssets) : '-'} projectedValues={projections.map(p => p.totalCurrentAssets)} />
       
-      <ScheduleRow label="Fixed Assets (Net)" indent={true} historicalValue={historical ? formatCurrency(historical.fixedAssets) : '-'} projectedValues={projections.map(p => p.fixedAssets)} />
-      <ScheduleRow label="Other Non-Current Assets" indent={true} historicalValue={historical ? formatCurrency(historical.otherNonCurrentAssets) : '-'} projectedValues={projections.map(p => p.otherNonCurrentAssets)} />
-      <ScheduleRow label="Total Assets" isHeader={true} historicalValue={historical ? formatCurrency(histTotalAssets) : '-'} projectedValues={projections.map(p => p.totalAssets)} />
+      <ScheduleRow label="Fixed Assets (Net)" indent={true} historicalValue={historical ? formatValue(historical.fixedAssets) : '-'} projectedValues={projections.map(p => p.fixedAssets)} />
+      <ScheduleRow label="Other Non-Current Assets" indent={true} historicalValue={historical ? formatValue(historical.otherNonCurrentAssets) : '-'} projectedValues={projections.map(p => p.otherNonCurrentAssets)} />
+      <ScheduleRow label="Total Assets" isHeader={true} historicalValue={historical ? formatValue(histTotalAssets) : '-'} projectedValues={projections.map(p => p.totalAssets)} />
 
       <ScheduleRow label="LIABILITIES & EQUITY" isHeader={true} />
-      <ScheduleRow label="Creditors / Payables" indent={true} historicalValue={historical ? formatCurrency(historical.creditors) : '-'} projectedValues={projections.map(p => p.creditors)} />
-      <ScheduleRow label="Other Current Liabilities" indent={true} historicalValue={historical ? formatCurrency(historical.otherCurrentLiabilities) : '-'} projectedValues={projections.map(p => p.otherCurrentLiabilities)} />
-      <ScheduleRow label="Short-Term Borrowings (CC/OD)" indent={true} historicalValue={historical ? formatCurrency(historical.shortTermBorrowings) : '-'} projectedValues={projections.map(p => p.shortTermBorrowings)} />
-      <ScheduleRow label="Total Current Liabilities" isSubTotal={true} historicalValue={historical ? formatCurrency(histCurrentLiab) : '-'} projectedValues={projections.map(p => p.totalCurrentLiabilities)} />
+      <ScheduleRow label="Creditors / Payables" indent={true} historicalValue={historical ? formatValue(historical.creditors) : '-'} projectedValues={projections.map(p => p.creditors)} />
+      <ScheduleRow label="Other Current Liabilities" indent={true} historicalValue={historical ? formatValue(historical.otherCurrentLiabilities) : '-'} projectedValues={projections.map(p => p.otherCurrentLiabilities)} />
+      <ScheduleRow label="Short-Term Borrowings (CC/OD)" indent={true} historicalValue={historical ? formatValue(historical.shortTermBorrowings) : '-'} projectedValues={projections.map(p => p.shortTermBorrowings)} />
+      <ScheduleRow label="Total Current Liabilities" isSubTotal={true} historicalValue={historical ? formatValue(histCurrentLiab) : '-'} projectedValues={projections.map(p => p.totalCurrentLiabilities)} />
       
-      <ScheduleRow label="Term Loans" indent={true} historicalValue={historical ? formatCurrency(historical.termLoans) : '-'} projectedValues={projections.map(p => p.termLoans)} />
-      <ScheduleRow label="Other Non-Current Liab." indent={true} historicalValue={historical ? formatCurrency(historical.otherNonCurrentLiabilities) : '-'} projectedValues={projections.map(p => p.otherNonCurrentLiabilities)} />
-      <ScheduleRow label="Equity & Reserves" indent={true} historicalValue={historical ? formatCurrency(historical.equity) : '-'} projectedValues={projections.map(p => p.equity)} />
-      <ScheduleRow label="Total Liabilities & Equity" isHeader={true} historicalValue={historical ? formatCurrency(histTotalLiabAndEq) : '-'} projectedValues={projections.map(p => p.totalLiabilitiesAndEquity)} />
+      <ScheduleRow label="Term Loans" indent={true} historicalValue={historical ? formatValue(historical.termLoans) : '-'} projectedValues={projections.map(p => p.termLoans)} />
+      <ScheduleRow label="Other Non-Current Liab." indent={true} historicalValue={historical ? formatValue(historical.otherNonCurrentLiabilities) : '-'} projectedValues={projections.map(p => p.otherNonCurrentLiabilities)} />
+      <ScheduleRow label="Equity & Reserves" indent={true} historicalValue={historical ? formatValue(historical.equity) : '-'} projectedValues={projections.map(p => p.equity)} />
+      <ScheduleRow label="Total Liabilities & Equity" isHeader={true} historicalValue={historical ? formatValue(histTotalLiabAndEq) : '-'} projectedValues={projections.map(p => p.totalLiabilitiesAndEquity)} />
 
-      <ScheduleRow label="Balance Check (Assets - L&E)" isSubTotal={true} historicalValue={historical ? formatCurrency(histDiff) : '-'} projectedValues={balanceCheckVals} />
+      <ScheduleRow label="Balance Check (Assets - L&E)" isSubTotal={true} historicalValue={historical ? formatValue(histDiff) : '-'} projectedValues={balanceCheckVals} />
     </ScheduleLayout>
   )
 }

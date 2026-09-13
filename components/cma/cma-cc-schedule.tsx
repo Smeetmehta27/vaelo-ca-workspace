@@ -1,4 +1,4 @@
-import { CMAScheduleProps, formatCurrency } from './utils'
+import { CMAScheduleProps, formatValue } from './utils'
 import { ScheduleLayout, ScheduleRow } from './schedule-layout'
 import { AuditedValue } from '@/lib/pipelines/cma'
 
@@ -19,7 +19,7 @@ export function CMACCSchedule({ historical, projections }: CMAScheduleProps) {
         <ScheduleRow label="Opening CC Balance" historicalValue="-" projectedValues={projections.map(p => p.openingShortTermBorrowings)} />
         <ScheduleRow label="CC Draw" historicalValue="-" projectedValues={projections.map(p => p.ccDraw)} />
         <ScheduleRow label="CC Repayment" historicalValue="-" projectedValues={projections.map(p => p.ccRepayment)} />
-        <ScheduleRow label="Closing CC Balance" isSubTotal={true} historicalValue={historical ? formatCurrency(historical.shortTermBorrowings) : '-'} projectedValues={projections.map(p => p.shortTermBorrowings)} />
+        <ScheduleRow label="Closing CC Balance" isSubTotal={true} historicalValue={historical ? formatValue(historical.shortTermBorrowings) : '-'} projectedValues={projections.map(p => p.shortTermBorrowings)} />
         
         <ScheduleRow label="Facility Constraints" isHeader={true} />
         <ScheduleRow label="Sanctioned Limit" historicalValue="-" projectedValues={projections.map(p => ({ value: p.drawingPower.inputs?.sanctionedLimit ?? 0, formula: 'assump.sanctionedLimit', inputs: {} } as AuditedValue))} />

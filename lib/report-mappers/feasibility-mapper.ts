@@ -4,7 +4,7 @@ export interface ScheduleRow {
   label: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value?: any;
-  isCurrency?: boolean;
+  valueType?: import('@/components/cma/utils').ValueType;
   isSubtotal?: boolean;
   isCustom?: boolean;
   customValue?: string;
@@ -45,37 +45,37 @@ export function mapFeasibilityReport(result: DealFeasibilityReportResult): Feasi
       scheduleTitle: 'Premium & Economics',
       columns: ['Value'],
       rows: [
-        { label: 'Target Standalone Value', value: premium.targetStandaloneValue, isCurrency: true },
+        { label: 'Target Standalone Value', value: premium.targetStandaloneValue, valueType: 'currency' },
         { label: 'Purchase Price', customValue: `₹${premium.purchasePrice.toLocaleString()}`, isCustom: true },
-        { label: 'Premium %', value: premium.premiumPct, isSubtotal: true }
+        { label: 'Premium %', value: premium.premiumPct, isSubtotal: true, valueType: 'percentage' }
       ]
     },
     {
       scheduleTitle: 'Sources & Uses (Cash)',
       columns: ['Value'],
       rows: [
-        { label: 'Cash Needed', value: sourcesAndUses.cashNeeded, isCurrency: true },
-        { label: 'Cash Sources (Debt + Acquirer Cash)', value: sourcesAndUses.cashSources, isCurrency: true },
-        { label: 'Funding Gap', value: sourcesAndUses.cashFundingGap, isCurrency: true, isSubtotal: true }
+        { label: 'Cash Needed', value: sourcesAndUses.cashNeeded, valueType: 'currency' },
+        { label: 'Cash Sources (Debt + Acquirer Cash)', value: sourcesAndUses.cashSources, valueType: 'currency' },
+        { label: 'Funding Gap', value: sourcesAndUses.cashFundingGap, valueType: 'currency', isSubtotal: true }
       ]
     },
     {
       scheduleTitle: 'Pro-Forma Combined (Day 1)',
       columns: ['Value'],
       rows: [
-        { label: 'Combined Revenue', value: proForma.combinedRevenue, isCurrency: true },
-        { label: 'Combined EBITDA', value: proForma.combinedEbitdaPreSynergy, isCurrency: true },
-        { label: 'Pro-Forma Net Income', value: proForma.combinedNetIncomePreSynergy, isCurrency: true, isSubtotal: true }
+        { label: 'Combined Revenue', value: proForma.combinedRevenue, valueType: 'currency' },
+        { label: 'Combined EBITDA', value: proForma.combinedEbitdaPreSynergy, valueType: 'currency' },
+        { label: 'Pro-Forma Net Income', value: proForma.combinedNetIncomePreSynergy, valueType: 'currency', isSubtotal: true }
       ]
     },
     {
       scheduleTitle: 'Accretion / Dilution (EPS)',
       columns: ['Value'],
       rows: [
-        { label: 'Acquirer Standalone EPS', value: accretionDilution.acquirerStandaloneEps },
-        { label: 'Pro-forma EPS (Pre-Synergy)', value: accretionDilution.proFormaEpsPreSynergy },
-        { label: 'Pre-Synergy Impact %', value: accretionDilution.changePreSynergyPct, isSubtotal: true },
-        { label: 'Post-Synergy Impact %', value: accretionDilution.changePostSynergyPct, isSubtotal: true }
+        { label: 'Acquirer Standalone EPS', value: accretionDilution.acquirerStandaloneEps, valueType: 'number' },
+        { label: 'Pro-forma EPS (Pre-Synergy)', value: accretionDilution.proFormaEpsPreSynergy, valueType: 'number' },
+        { label: 'Pre-Synergy Impact %', value: accretionDilution.changePreSynergyPct, isSubtotal: true, valueType: 'percentage' },
+        { label: 'Post-Synergy Impact %', value: accretionDilution.changePostSynergyPct, isSubtotal: true, valueType: 'percentage' }
       ]
     }
   ];

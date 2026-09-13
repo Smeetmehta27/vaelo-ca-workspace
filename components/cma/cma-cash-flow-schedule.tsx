@@ -1,4 +1,4 @@
-import { CMAScheduleProps, formatCurrency } from './utils'
+import { CMAScheduleProps, formatValue } from './utils'
 import { ScheduleLayout, ScheduleRow } from './schedule-layout'
 import { AuditedValue } from '@/lib/pipelines/cma'
 
@@ -34,7 +34,7 @@ export function CMACashFlowSchedule({ historical, projections }: CMAScheduleProp
       <ScheduleRow label="CC Draw / (Repayment)" historicalValue="-" projectedValues={projections.map(p => p.cashSweep)} />
       <ScheduleRow label="Unfunded Deficit (If Any)" historicalValue="-" projectedValues={projections.map(p => p.unfundedCashDeficit)} />
       
-      <ScheduleRow label="Closing Cash Balance" isSubTotal={true} historicalValue={historical ? formatCurrency(historical.cash) : '-'} projectedValues={projections.map(p => p.cash)} />
+      <ScheduleRow label="Closing Cash Balance" isSubTotal={true} historicalValue={historical ? formatValue(historical.cash) : '-'} projectedValues={projections.map(p => p.cash)} />
     </ScheduleLayout>
   )
 }

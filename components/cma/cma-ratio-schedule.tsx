@@ -17,7 +17,7 @@ export function CMARatioSchedule({ historical, projections }: CMAScheduleProps) 
         label="Current Ratio (CA / CL)" 
         historicalValue={formatNumber(histCurrentRatio)} 
         projectedValues={projections.map(p => p.currentRatio)} 
-        isCurrency={false}
+        valueType='ratio'
       />
       
       <ScheduleRow label="Leverage Ratios" isHeader={true} />
@@ -25,13 +25,13 @@ export function CMARatioSchedule({ historical, projections }: CMAScheduleProps) 
         label="Total Debt / Equity Ratio" 
         historicalValue={formatNumber(histDebtEquity)} 
         projectedValues={projections.map(p => p.debtEquityRatio)} 
-        isCurrency={false}
+        valueType='ratio'
       />
       <ScheduleRow 
         label="TOL / TNW" 
         historicalValue={formatNumber(histTolTnw)} 
         projectedValues={projections.map(p => p.tolTnwRatio)} 
-        isCurrency={false}
+        valueType='ratio'
       />
       
       <ScheduleRow label="Coverage Ratios" isHeader={true} />
@@ -39,7 +39,7 @@ export function CMARatioSchedule({ historical, projections }: CMAScheduleProps) 
         label="DSCR" 
         historicalValue="-" 
         projectedValues={projections.map(p => p.dscr)} 
-        isCurrency={false}
+        valueType='ratio'
       />
 
       <ScheduleRow label="Profitability Ratios" isHeader={true} />
@@ -47,7 +47,7 @@ export function CMARatioSchedule({ historical, projections }: CMAScheduleProps) 
         label="ROE (%)" 
         historicalValue="-" 
         projectedValues={projections.map(p => p.roe)} 
-        isCurrency={false}
+        valueType='ratio'
       />
     </ScheduleLayout>
   )

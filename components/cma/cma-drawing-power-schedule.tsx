@@ -1,4 +1,4 @@
-import { CMAScheduleProps, formatCurrency } from './utils'
+import { CMAScheduleProps, formatValue } from './utils'
 import { ScheduleLayout, ScheduleRow } from './schedule-layout'
 
 export function CMADrawingPowerSchedule({ historical, projections }: CMAScheduleProps) {
@@ -10,7 +10,7 @@ export function CMADrawingPowerSchedule({ historical, projections }: CMASchedule
     <ScheduleLayout title="Schedule 7 — Drawing Power Calculation" historical={historical} projections={projections}>
       <ScheduleRow label="Eligible Stock (Net of Margin)" historicalValue="-" projectedValues={projections.map(p => p.eligibleStock)} />
       <ScheduleRow label="Eligible Debtors (Net of Margin)" historicalValue="-" projectedValues={projections.map(p => p.eligibleDebtors)} />
-      <ScheduleRow label="Less: Unpaid Creditors" historicalValue={historical ? formatCurrency(historical.creditors) : '-'} projectedValues={projections.map(p => p.creditors)} />
+      <ScheduleRow label="Less: Unpaid Creditors" historicalValue={historical ? formatValue(historical.creditors) : '-'} projectedValues={projections.map(p => p.creditors)} />
       <ScheduleRow label="Net Drawing Power" isSubTotal={true} historicalValue="-" projectedValues={projections.map(p => p.drawingPower)} />
     </ScheduleLayout>
   )

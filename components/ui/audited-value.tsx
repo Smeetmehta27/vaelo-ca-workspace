@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
+import { formatValue, ValueType } from '@/components/cma/utils'
 
 export type AuditedValueProps = {
   value: number;
@@ -8,16 +9,13 @@ export type AuditedValueProps = {
   inputs: Record<string, number>;
 }
 
-export function AuditedValueDisplay({ data, isCurrency = false }: { data: AuditedValueProps, isCurrency?: boolean }) {
+export function AuditedValueDisplay({ data, valueType = 'number' }: { data: AuditedValueProps, valueType?: ValueType }) {
   const [expanded, setExpanded] = useState(false)
   const [position, setPosition] = useState<'bottom' | 'top'>('bottom')
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const formatNumber = (num: number) => {
-    if (isCurrency) {
-      return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(num) + ' Cr'
-    }
-    return new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(num)
+  const formatOutput = (num: number) => {
+    return formatValue(num, valueType);
   }
 
   const toggleExpand = () => {
@@ -55,7 +53,7 @@ export function AuditedValueDisplay({ data, isCurrency = false }: { data: Audite
   return (
     <div className="relative flex flex-col group min-w-[120px]" ref={containerRef}>
       <div className="flex items-center justify-between gap-2">
-        <span className="font-mono text-ink">{formatNumber(data.value)}</span>
+        <span className="font-mono text-ink">{formatOutput(data.value)}</span>
         <button 
           onClick={toggleExpand}
           className="text-[10px] uppercase tracking-wider font-semibold text-stone hover:text-blue-600 transition-colors"
@@ -76,7 +74,7 @@ export function AuditedValueDisplay({ data, isCurrency = false }: { data: Audite
             {Object.entries(data.inputs).map(([key, val]) => (
               <li key={key} className="flex justify-between items-center border-b border-slate-50 pb-1 last:border-0">
                 <span className="font-mono text-ink-soft break-all pr-2">{key}</span> 
-                <span className="font-mono font-medium whitespace-nowrap">{formatNumber(val)}</span>
+                <span className="font-mono font-medium whitespace-nowrap">{formatOutput(val)}</span>
               </li>
             ))}
           </ul>

@@ -54,7 +54,7 @@ export function FinancialHealthViewer({ clientId, result }: { clientId: string; 
                     <span className={row.isSubtotal ? 'text-ink' : 'text-ink-soft'}>{row.label}</span>
                     <div className="font-mono text-ink">
                       {row.value !== null && row.value !== undefined ? (
-                        <AuditedValueDisplay data={row.value} isCurrency={row.isCurrency} />
+                        <AuditedValueDisplay data={row.value} valueType={row.valueType} />
                       ) : (
                         <span>N/A</span>
                       )}

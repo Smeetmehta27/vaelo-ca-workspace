@@ -25,7 +25,7 @@ export function CMAScenarioComparison({ baseProjections, scenarios, reportData }
 
   const baseFinal = getFinalYear(baseProjections);
 
-  const formatCurrency = (val: { value: number } | undefined | null) => {
+  const formatValue = (val: { value: number } | undefined | null) => {
     if (val === undefined || val === null || val.value === undefined) return '-';
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -75,18 +75,18 @@ export function CMAScenarioComparison({ baseProjections, scenarios, reportData }
             </tr>
             <tr>
               <td className="px-6 py-3 text-ink-soft">Revenue</td>
-              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatCurrency(baseFinal?.revenue)}</td>
-              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatCurrency(getFinalYear(s.projections)?.revenue)}</td>)}
+              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatValue(baseFinal?.revenue)}</td>
+              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatValue(getFinalYear(s.projections)?.revenue)}</td>)}
             </tr>
             <tr>
               <td className="px-6 py-3 text-ink-soft">EBITDA</td>
-              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatCurrency(baseFinal?.ebitda)}</td>
-              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatCurrency(getFinalYear(s.projections)?.ebitda)}</td>)}
+              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatValue(baseFinal?.ebitda)}</td>
+              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatValue(getFinalYear(s.projections)?.ebitda)}</td>)}
             </tr>
             <tr>
               <td className="px-6 py-3 text-ink-soft">Net Profit (PAT)</td>
-              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatCurrency(baseFinal?.netProfit)}</td>
-              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatCurrency(getFinalYear(s.projections)?.netProfit)}</td>)}
+              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatValue(baseFinal?.netProfit)}</td>
+              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatValue(getFinalYear(s.projections)?.netProfit)}</td>)}
             </tr>
 
             {/* Liquidity */}
@@ -95,13 +95,13 @@ export function CMAScenarioComparison({ baseProjections, scenarios, reportData }
             </tr>
             <tr>
               <td className="px-6 py-3 text-ink-soft">Closing Cash</td>
-              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatCurrency(baseFinal?.cash)}</td>
-              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatCurrency(getFinalYear(s.projections)?.cash)}</td>)}
+              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatValue(baseFinal?.cash)}</td>
+              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatValue(getFinalYear(s.projections)?.cash)}</td>)}
             </tr>
             <tr>
               <td className="px-6 py-3 text-ink-soft">Net Working Capital</td>
-              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatCurrency(baseFinal?.netWorkingCapital)}</td>
-              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatCurrency(getFinalYear(s.projections)?.netWorkingCapital)}</td>)}
+              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatValue(baseFinal?.netWorkingCapital)}</td>
+              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatValue(getFinalYear(s.projections)?.netWorkingCapital)}</td>)}
             </tr>
             <tr>
               <td className="px-6 py-3 text-ink-soft">Current Ratio</td>
@@ -120,28 +120,28 @@ export function CMAScenarioComparison({ baseProjections, scenarios, reportData }
             </tr>
             <tr>
               <td className="px-6 py-3 text-ink-soft">MPBF (Method 2)</td>
-              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatCurrency(baseFinal?.mpbfMethod2)}</td>
-              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatCurrency(getFinalYear(s.projections)?.mpbfMethod2)}</td>)}
+              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatValue(baseFinal?.mpbfMethod2)}</td>
+              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatValue(getFinalYear(s.projections)?.mpbfMethod2)}</td>)}
             </tr>
             <tr>
               <td className="px-6 py-3 text-ink-soft">Drawing Power</td>
-              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatCurrency(baseFinal?.drawingPower)}</td>
-              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatCurrency(getFinalYear(s.projections)?.drawingPower)}</td>)}
+              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatValue(baseFinal?.drawingPower)}</td>
+              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatValue(getFinalYear(s.projections)?.drawingPower)}</td>)}
             </tr>
             <tr>
               <td className="px-6 py-3 text-ink-soft">Sanctioned CC Limit</td>
-              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatCurrency({ value: baseFinal?.drawingPower?.inputs?.sanctionedLimit ?? 0 })}</td>
-              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatCurrency({ value: getFinalYear(s.projections)?.drawingPower?.inputs?.sanctionedLimit ?? 0 })}</td>)}
+              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatValue({ value: baseFinal?.drawingPower?.inputs?.sanctionedLimit ?? 0 })}</td>
+              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatValue({ value: getFinalYear(s.projections)?.drawingPower?.inputs?.sanctionedLimit ?? 0 })}</td>)}
             </tr>
             <tr>
               <td className="px-6 py-3 text-ink-soft">CC Utilization</td>
-              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatCurrency(baseFinal?.shortTermBorrowings)}</td>
-              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatCurrency(getFinalYear(s.projections)?.shortTermBorrowings)}</td>)}
+              <td className="px-6 py-3 text-right font-medium text-ink font-mono">{formatValue(baseFinal?.shortTermBorrowings)}</td>
+              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-ink-soft font-mono">{formatValue(getFinalYear(s.projections)?.shortTermBorrowings)}</td>)}
             </tr>
             <tr>
               <td className="px-6 py-3 text-ink-soft">Unfunded Cash Deficit</td>
-              <td className="px-6 py-3 text-right font-medium text-status-risk font-mono">{formatCurrency(baseFinal?.unfundedCashDeficit)}</td>
-              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-status-risk font-mono">{formatCurrency(getFinalYear(s.projections)?.unfundedCashDeficit)}</td>)}
+              <td className="px-6 py-3 text-right font-medium text-status-risk font-mono">{formatValue(baseFinal?.unfundedCashDeficit)}</td>
+              {scenarios.map(s => <td key={s.scenarioId} className="px-6 py-3 text-right text-status-risk font-mono">{formatValue(getFinalYear(s.projections)?.unfundedCashDeficit)}</td>)}
             </tr>
             
             {/* Health & Warnings */}
