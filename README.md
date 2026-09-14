@@ -20,7 +20,14 @@ Vaelo is a financial intelligence workspace built for Chartered Accountant (CA) 
 ### Client Management
 Full client lifecycle management with a 3-tier team role hierarchy — **Owner**, **Partner**, and **Staff** — enforced at the database level via Supabase Row Level Security (RLS). Every query is scoped to the authenticated user's firm and role.
 
-> **Note:** The role/RLS model and the `team_members` / `team_invites` tables are fully built and enforced. However, the invite *redemption flow* (sending invitations and onboarding new team members through the UI) is **not yet implemented** — there is no management UI or email-based invite acceptance yet.
+### Team Invites & Management (FR-CLI-2/3)
+Owners and Partners can invite new team members from the `/team` page. The invite flow generates a unique tokenized signup link (`/signup?invite=<token>`) that:
+- Pre-fills and locks the email field to the invited address
+- Displays the inviting firm name and offered role
+- Atomically joins the invitee to the existing firm on signup (via the `handle_new_user` database trigger), instead of creating a new firm
+- Hard-rejects invalid, expired, or already-accepted tokens at the database level
+
+Staff members cannot create invites. The team roster page shows all current members with their roles.
 
 ### Financial Reporting Pipelines
 Three deterministic, auditable calculation pipelines that accept structured inputs and produce fully reproducible outputs:
@@ -39,7 +46,20 @@ Create and manage document request lists per client. Each request tracks status 
 Per-client event timeline tracking key actions (report generation, document uploads, status changes).
 
 ### New User Provisioning
-A database trigger (`handle_new_user`) automatically provisions a firm, CA profile, and team membership for every new signup, ensuring the application is immediately usable without manual setup.
+A database trigger (`handle_new_user`) automatically provisions a firm, CA profile, and team membership for every new signup. If the signup includes a valid invite token, the user joins the inviter's existing firm with the invited role instead of creating a new one. Invalid tokens cause a hard failure (no orphaned accounts).
+
+## Not Yet Implemented
+
+The following features from the SRS are planned but not yet built:
+
+- **FR-DOC-5** — Advanced document request workflow improvements
+- **FR-CAL** — Calendar / deadline tracking
+- **FR-REV** — Revenue tracking and analytics
+- **FR-NOT** — Notification system
+- **FR-BIL** — Billing and invoicing
+- **FR-RPT-2** — Additional report types beyond CMA, Feasibility, and Financial Health
+- **FR-DASH-2/3** — Advanced dashboard views and analytics
+- **FR-KNOW** — Knowledge base / reference library
 
 ## Documentation
 

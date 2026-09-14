@@ -28,6 +28,16 @@ export function MainNav() {
       >
         Clients
       </Link>
+      <Link 
+        href="/team" 
+        className={`text-sm font-medium transition-colors ${
+          pathname?.startsWith('/team') 
+            ? 'text-bronze' 
+            : 'text-ink-soft hover:text-ink'
+        }`}
+      >
+        Team
+      </Link>
     </nav>
   )
 }

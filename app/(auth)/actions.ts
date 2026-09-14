@@ -22,7 +22,7 @@ export async function login(formData: FormData) {
   redirect('/dashboard')
 }
 
-export async function signup(formData: FormData) {
+export async function signup(formData: FormData, inviteToken?: string) {
   const supabase = createClient()
   const origin = getBaseUrl()
   const data = {
@@ -34,10 +34,14 @@ export async function signup(formData: FormData) {
     ...data,
     options: {
       emailRedirectTo: `${origin}/auth/callback`,
+      data: inviteToken ? { invite_token: inviteToken } : undefined,
     },
   })
 
   if (error) {
+    if (error.message.includes('INVALID_INVITE')) {
+      redirect('/signup?message=This invite is no longer valid. Ask your firm owner for a new one.')
+    }
     redirect('/signup?message=Could not sign up user')
   }
 
