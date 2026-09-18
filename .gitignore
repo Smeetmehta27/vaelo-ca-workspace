@@ -45,3 +45,8 @@ inspect_*.js
 scratch-*.json
 scratch/
 
+# root-level throwaway verification scripts
+/test_*.mjs
+/setup_test_*.mjs
+/followup_*.mjs
+/temp.txt
