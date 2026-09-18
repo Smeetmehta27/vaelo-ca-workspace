@@ -7,7 +7,7 @@ export type Json =
   | Json[];
 
 export type ReportType = 'cma' | 'feasibility' | 'financial_health';
-export type ReportStatus = 'draft' | 'reviewed' | 'finalized';
+export type ReportStatus = 'draft' | 'submitted_for_review' | 'changes_requested' | 'approved' | 'finalized';
 
 export interface CAProfile {
   id: string; // matches auth.users.id

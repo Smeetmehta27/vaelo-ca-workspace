@@ -1,8 +1,9 @@
 'use client'
 import { useState } from 'react'
 
-export function FinancialHealthForm({ action, defaultClientName }: { action: (payload: FormData) => void, defaultClientName?: string }) {
-  const [historicalRevenues, setHistoricalRevenues] = useState<number[]>([8.0, 9.2, 10.5, 10.1, 11.4])
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function FinancialHealthForm({ action, defaultClientName, defaultFinancials }: { action: (payload: FormData) => void, defaultClientName?: string, defaultFinancials?: any }) {
+  const [historicalRevenues, setHistoricalRevenues] = useState<number[]>([8.0, 9.2, 10.5, 10.1, defaultFinancials?.revenue ? (defaultFinancials.revenue / 10000000) : 11.4])
 
   return (
     <form action={action} className="flex flex-col gap-8">
@@ -28,15 +29,15 @@ export function FinancialHealthForm({ action, defaultClientName }: { action: (pa
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Current Assets (Rs Cr)</label>
-            <input type="number" step="any" name="currentAssets" defaultValue={6.2} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" step="any" name="currentAssets" defaultValue={(defaultFinancials?.cash !== undefined && defaultFinancials?.stock !== undefined && defaultFinancials?.debtors !== undefined && defaultFinancials?.otherCurrentAssets !== undefined) ? ((defaultFinancials.cash + defaultFinancials.stock + defaultFinancials.debtors + defaultFinancials.otherCurrentAssets) / 10000000) : 6.2} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Current Liabilities (Rs Cr)</label>
-            <input type="number" step="any" name="currentLiabilities" defaultValue={3.4} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" step="any" name="currentLiabilities" defaultValue={(defaultFinancials?.creditors !== undefined && defaultFinancials?.shortTermBorrowings !== undefined && defaultFinancials?.otherCurrentLiabilities !== undefined) ? ((defaultFinancials.creditors + defaultFinancials.shortTermBorrowings + defaultFinancials.otherCurrentLiabilities) / 10000000) : 3.4} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Cash & Equivalents (Rs Cr)</label>
-            <input type="number" step="any" name="cashAndEquivalents" defaultValue={2.1} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" step="any" name="cashAndEquivalents" defaultValue={defaultFinancials?.cash !== undefined ? (defaultFinancials.cash / 10000000) : 2.1} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Monthly Net Cash Flow (Rs Cr)</label>
@@ -56,7 +57,7 @@ export function FinancialHealthForm({ action, defaultClientName }: { action: (pa
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Revenue (Current Year)</label>
-            <input type="number" step="any" name="revenueCurrentYear" defaultValue={10.5} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" step="any" name="revenueCurrentYear" defaultValue={defaultFinancials?.revenue !== undefined ? (defaultFinancials.revenue / 10000000) : 10.5} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">OpEx (Prior Year)</label>
@@ -64,7 +65,7 @@ export function FinancialHealthForm({ action, defaultClientName }: { action: (pa
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">OpEx (Current Year)</label>
-            <input type="number" step="any" name="operatingExpensesCurrentYear" defaultValue={8.3} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" step="any" name="operatingExpensesCurrentYear" defaultValue={defaultFinancials?.operatingExpenses !== undefined ? (defaultFinancials.operatingExpenses / 10000000) : 8.3} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
         </div>
       </div>

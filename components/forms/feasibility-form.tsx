@@ -1,4 +1,5 @@
-export function FeasibilityForm({ action, defaultClientName }: { action: (payload: FormData) => void, defaultClientName?: string }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function FeasibilityForm({ action, defaultClientName, defaultFinancials }: { action: (payload: FormData) => void, defaultClientName?: string, defaultFinancials?: any }) {
   return (
     <form action={action} className="flex flex-col gap-8">
       {/* Meta Section */}
@@ -64,7 +65,7 @@ export function FeasibilityForm({ action, defaultClientName }: { action: (payloa
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-[10px] text-ink-soft">Revenue</label>
-                <input type="number" step="any" name="tgt_revenue" defaultValue={15.0} className="w-full px-3 py-1.5 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze text-xs" />
+                <input type="number" step="any" name="tgt_revenue" defaultValue={defaultFinancials?.revenue ? (defaultFinancials.revenue / 10000000) : 15.0} className="w-full px-3 py-1.5 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze text-xs" />
               </div>
               <div>
                 <label className="block text-[10px] text-ink-soft">EBITDA</label>
@@ -76,7 +77,7 @@ export function FeasibilityForm({ action, defaultClientName }: { action: (payloa
               </div>
               <div>
                 <label className="block text-[10px] text-ink-soft">Net Debt</label>
-                <input type="number" step="any" name="tgt_netDebt" defaultValue={2.0} className="w-full px-3 py-1.5 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze text-xs" />
+                <input type="number" step="any" name="tgt_netDebt" defaultValue={(defaultFinancials?.termLoans !== undefined && defaultFinancials?.shortTermBorrowings !== undefined && defaultFinancials?.cash !== undefined) ? ((defaultFinancials.termLoans + defaultFinancials.shortTermBorrowings - defaultFinancials.cash) / 10000000) : 2.0} className="w-full px-3 py-1.5 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze text-xs" />
               </div>
               <div className="col-span-2">
                 <label className="block text-[10px] text-ink-soft">Shares Outstanding (Count)</label>

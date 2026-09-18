@@ -33,13 +33,31 @@ export async function createClientAction(formData: FormData) {
     throw new Error('Staff members cannot create new clients')
   }
 
+  const gstin = formData.get('gstin') as string
+  const pan = formData.get('pan') as string
+  const filing_frequency = formData.get('filing_frequency') as string
+  const registration_date = formData.get('registration_date') as string
+  const primary_contact_name = formData.get('primary_contact_name') as string
+  const primary_contact_phone = formData.get('primary_contact_phone') as string
+  const primary_contact_email = formData.get('primary_contact_email') as string
+
+  const assigned_to_input = formData.get('assigned_to') as string
+  const assigned_to = assigned_to_input || teamMember.id
+
   const { error } = await supabase
     .from('clients')
     .insert({
       ca_id: teamMember.firm_id,
-      assigned_to: teamMember.id,
+      assigned_to: assigned_to,
       company_name,
-      entity_type: entity_type || null
+      entity_type: entity_type || null,
+      gstin: gstin || null,
+      pan: pan || null,
+      filing_frequency: filing_frequency || null,
+      registration_date: registration_date || null,
+      primary_contact_name: primary_contact_name || null,
+      primary_contact_phone: primary_contact_phone || null,
+      primary_contact_email: primary_contact_email || null
     })
     .select()
     .single()
@@ -51,4 +69,27 @@ export async function createClientAction(formData: FormData) {
 
   revalidatePath('/clients')
   redirect('/clients')
+}
+
+export async function reassignClientAction(formData: FormData) {
+  const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Not authenticated')
+
+  const client_id = formData.get('client_id') as string
+  const assigned_to = formData.get('assigned_to') as string
+
+  if (!client_id || !assigned_to) throw new Error('Missing fields')
+
+  const { error } = await supabase
+    .from('clients')
+    .update({ assigned_to })
+    .eq('id', client_id)
+
+  if (error) {
+    console.error('Error reassigning client:', error)
+    throw new Error('Failed to reassign client')
+  }
+
+  revalidatePath(`/clients/${client_id}`)
 }

@@ -16,7 +16,7 @@ function SubmitButton() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function CMAForm({ action }: { action: any }) {
+export function CMAForm({ action, defaultFinancials }: { action: any, defaultFinancials?: any }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [state, formAction] = useFormState(action, { success: false } as any)
 
@@ -39,63 +39,63 @@ export function CMAForm({ action }: { action: any }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Revenue</label>
-            <input type="number" min="0" name="historical_revenue" defaultValue={10000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_revenue" defaultValue={defaultFinancials?.revenue ?? 10000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">COGS</label>
-            <input type="number" min="0" name="historical_cogs" defaultValue={6000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_cogs" defaultValue={defaultFinancials?.cogs ?? 6000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Operating Expenses</label>
-            <input type="number" min="0" name="historical_opEx" defaultValue={2000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_opEx" defaultValue={defaultFinancials?.operatingExpenses ?? 2000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Closing Stock</label>
-            <input type="number" min="0" name="historical_stock" defaultValue={1500000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_stock" defaultValue={defaultFinancials?.stock ?? 1500000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Sundry Debtors</label>
-            <input type="number" min="0" name="historical_debtors" defaultValue={2500000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_debtors" defaultValue={defaultFinancials?.debtors ?? 2500000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Sundry Creditors</label>
-            <input type="number" min="0" name="historical_creditors" defaultValue={1000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_creditors" defaultValue={defaultFinancials?.creditors ?? 1000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Other Current Assets</label>
-            <input type="number" min="0" name="historical_oca" defaultValue={0} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_oca" defaultValue={defaultFinancials?.otherCurrentAssets ?? 0} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Other Current Liabilities</label>
-            <input type="number" min="0" name="historical_ocl" defaultValue={0} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_ocl" defaultValue={defaultFinancials?.otherCurrentLiabilities ?? 0} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Fixed Assets (Net Block)</label>
-            <input type="number" min="0" name="historical_fixedAssets" defaultValue={4500000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_fixedAssets" defaultValue={defaultFinancials?.fixedAssets ?? 4500000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Other Non-Current Assets</label>
-            <input type="number" min="0" name="historical_otherNonCurrentAssets" defaultValue={0} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_otherNonCurrentAssets" defaultValue={defaultFinancials?.otherNonCurrentAssets ?? 0} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Term Loans (Outstanding)</label>
-            <input type="number" min="0" name="historical_termLoans" defaultValue={5000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_termLoans" defaultValue={defaultFinancials?.termLoans ?? 5000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Short-Term Borrowings (CC/OD)</label>
-            <input type="number" min="0" name="historical_shortTermBorrowings" defaultValue={2000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_shortTermBorrowings" defaultValue={defaultFinancials?.shortTermBorrowings ?? 2000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Other Non-Current Liab.</label>
-            <input type="number" min="0" name="historical_otherNonCurrentLiabilities" defaultValue={0} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_otherNonCurrentLiabilities" defaultValue={defaultFinancials?.otherNonCurrentLiabilities ?? 0} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Total Net Worth (Equity)</label>
-            <input type="number" name="historical_equity" defaultValue={1000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" name="historical_equity" defaultValue={defaultFinancials?.equity ?? 1000000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
           <div>
             <label className="block text-xs font-medium text-ink-soft mb-1">Cash & Bank</label>
-            <input type="number" min="0" name="historical_cash" defaultValue={500000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
+            <input type="number" min="0" name="historical_cash" defaultValue={defaultFinancials?.cash ?? 500000} className="w-full px-4 py-2 border border-stone-line bg-paper rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-bronze focus:border-bronze sm:text-sm" />
           </div>
         </div>
       </div>

@@ -73,6 +73,7 @@ export async function getTeamRoster() {
   const { data: roster, error: rosterError } = await supabase
     .from('team_members')
     .select(`
+      id,
       user_id,
       role,
       ca_profiles(name)
@@ -112,9 +113,10 @@ export async function getTeamRoster() {
     // Type casting to handle the joined profile
     const profile = member.ca_profiles as unknown as { name: string } | null
     return {
+      id: member.id,
       user_id: member.user_id,
       role: member.role,
-      name: profile?.name || 'Unnamed',
+      name: profile?.name || email,
       email
     }
   }))

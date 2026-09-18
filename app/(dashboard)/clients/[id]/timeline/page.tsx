@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { formatDateTime } from '@/lib/utils'
+import { TimelineControls } from './TimelineControls'
 
 export default async function ClientTimelinePage({ 
   params 
@@ -42,9 +43,14 @@ export default async function ClientTimelinePage({
       case 'item_rejected':
         return <span className="w-2.5 h-2.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
       case 'item_received':
+      case 'report_finalized':
         return <span className="w-2.5 h-2.5 rounded-full bg-blue-500 mt-1.5 shrink-0" />
       case 'list_created':
         return <span className="w-2.5 h-2.5 rounded-full bg-gray-400 mt-1.5 shrink-0" />
+      case 'notice_logged':
+        return <span className="w-2.5 h-2.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
+      case 'note':
+        return <span className="w-2.5 h-2.5 rounded-full bg-purple-500 mt-1.5 shrink-0" />
       default:
         return <span className="w-2.5 h-2.5 rounded-full bg-gray-300 mt-1.5 shrink-0" />
     }
@@ -89,14 +95,25 @@ export default async function ClientTimelinePage({
         </div>
         
         <div className="p-6">
+          <TimelineControls clientId={client.id} token={client.timeline_access_token} />
+
           {events && events.length > 0 ? (
             <div className="flex flex-col gap-4">
               {events.map((event) => (
                 <div key={event.id} className="flex items-start gap-4 p-4 rounded-lg bg-gray-50 border border-gray-100">
                   {getEventBadge(event.event_type)}
-                  <div className="flex flex-col gap-1">
-                    <p className="text-sm font-medium text-gray-900">{event.summary}</p>
-                    <span className="text-xs text-gray-500">{formatDateTime(event.created_at)}</span>
+                  <div className="flex flex-col gap-1 w-full">
+                    <div className="flex justify-between items-start">
+                      <p className="text-sm font-medium text-gray-900">{event.summary}</p>
+                      {!event.visible_to_client && (
+                        <span className="text-[10px] font-semibold tracking-wider uppercase bg-gray-200 text-gray-600 px-2 py-0.5 rounded ml-2 shrink-0">
+                          Internal Only
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs text-gray-500">
+                      {formatDateTime(event.created_at)} &middot; {event.event_type.replace('_', ' ')}
+                    </span>
                   </div>
                 </div>
               ))}

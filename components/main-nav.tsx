@@ -29,6 +29,46 @@ export function MainNav() {
         Clients
       </Link>
       <Link 
+        href="/documents" 
+        className={`text-sm font-medium transition-colors ${
+          pathname?.startsWith('/documents') 
+            ? 'text-bronze' 
+            : 'text-ink-soft hover:text-ink'
+        }`}
+      >
+        Documents
+      </Link>
+      <Link 
+        href="/compliance" 
+        className={`text-sm font-medium transition-colors ${
+          pathname?.startsWith('/compliance') 
+            ? 'text-bronze' 
+            : 'text-ink-soft hover:text-ink'
+        }`}
+      >
+        Compliance
+      </Link>
+      <Link 
+        href="/notices" 
+        className={`text-sm font-medium transition-colors ${
+          pathname?.startsWith('/notices') 
+            ? 'text-bronze' 
+            : 'text-ink-soft hover:text-ink'
+        }`}
+      >
+        Notices
+      </Link>
+      <Link 
+        href="/review" 
+        className={`text-sm font-medium transition-colors ${
+          pathname?.startsWith('/review') 
+            ? 'text-bronze' 
+            : 'text-ink-soft hover:text-ink'
+        }`}
+      >
+        Review Queue
+      </Link>
+      <Link 
         href="/team" 
         className={`text-sm font-medium transition-colors ${
           pathname?.startsWith('/team') 

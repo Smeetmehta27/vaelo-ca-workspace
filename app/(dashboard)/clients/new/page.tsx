@@ -1,7 +1,9 @@
 import { createClientAction } from '../actions'
 import Link from 'next/link'
+import { getTeamRoster } from '@/lib/actions/team-actions'
 
-export default function NewClientPage() {
+export default async function NewClientPage() {
+  const { roster } = await getTeamRoster()
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
@@ -24,6 +26,21 @@ export default function NewClientPage() {
           </div>
 
           <div>
+            <label htmlFor="assigned_to" className="block text-sm font-medium text-gray-700 mb-1">Assigned Team Member</label>
+            <select 
+              id="assigned_to" 
+              name="assigned_to" 
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 sm:text-sm bg-white"
+            >
+              <option value="">Default (Me)</option>
+              {roster.map(tm => (
+                <option key={tm.id} value={tm.id}>{tm.name} ({tm.role})</option>
+              ))}
+            </select>
+            <p className="mt-1 text-xs text-gray-500">Who will be the primary handler for this client.</p>
+          </div>
+
+          <div>
             <label htmlFor="entity_type" className="block text-sm font-medium text-gray-700 mb-1">Entity Type</label>
             <select 
               id="entity_type" 
@@ -38,6 +55,45 @@ export default function NewClientPage() {
               <option value="Proprietorship">Proprietorship</option>
               <option value="Trust">Trust / NGO</option>
             </select>
+          </div>
+
+          <div>
+            <label htmlFor="gstin" className="block text-sm font-medium text-gray-700 mb-1">GSTIN</label>
+            <input type="text" id="gstin" name="gstin" className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="e.g. 22AAAAA0000A1Z5" />
+          </div>
+
+          <div>
+            <label htmlFor="pan" className="block text-sm font-medium text-gray-700 mb-1">PAN</label>
+            <input type="text" id="pan" name="pan" className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="e.g. ABCDE1234F" />
+          </div>
+
+          <div>
+            <label htmlFor="filing_frequency" className="block text-sm font-medium text-gray-700 mb-1">Filing Frequency</label>
+            <select id="filing_frequency" name="filing_frequency" className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm bg-white">
+              <option value="">Select frequency...</option>
+              <option value="Monthly">Monthly</option>
+              <option value="QRMP">QRMP</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="registration_date" className="block text-sm font-medium text-gray-700 mb-1">Registration Date</label>
+            <input type="date" id="registration_date" name="registration_date" className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm" />
+          </div>
+
+          <div>
+            <label htmlFor="primary_contact_name" className="block text-sm font-medium text-gray-700 mb-1">Primary Contact Name</label>
+            <input type="text" id="primary_contact_name" name="primary_contact_name" className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="e.g. John Doe" />
+          </div>
+
+          <div>
+            <label htmlFor="primary_contact_phone" className="block text-sm font-medium text-gray-700 mb-1">Primary Contact Phone</label>
+            <input type="text" id="primary_contact_phone" name="primary_contact_phone" className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="e.g. +91 9876543210" />
+          </div>
+
+          <div>
+            <label htmlFor="primary_contact_email" className="block text-sm font-medium text-gray-700 mb-1">Primary Contact Email</label>
+            <input type="email" id="primary_contact_email" name="primary_contact_email" className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm" placeholder="e.g. contact@example.com" />
           </div>
 
           <div className="pt-4 border-t border-gray-100 flex justify-end gap-3">

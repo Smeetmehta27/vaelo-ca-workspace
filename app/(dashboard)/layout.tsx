@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { logout } from '@/app/(auth)/actions'
 import { VaeloMark } from '@/components/ui/vaelo-mark'
 import { MainNav } from '@/components/main-nav'
+import { NotificationBell } from '@/components/notifications/bell'
 
 export default async function DashboardLayout({
   children,
@@ -24,6 +25,7 @@ export default async function DashboardLayout({
           <MainNav />
         </div>
         <div className="flex items-center gap-4">
+          <NotificationBell />
           <span className="text-sm text-ink-soft">{user.email}</span>
           <form action={logout}>
             <button type="submit" className="text-sm font-medium text-ink-soft hover:text-ink transition-colors">Log out</button>
