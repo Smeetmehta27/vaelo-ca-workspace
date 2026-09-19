@@ -47,6 +47,9 @@ scratch/
 
 # root-level throwaway verification scripts
 /test_*.mjs
+/test_*.js
 /setup_test_*.mjs
 /followup_*.mjs
 /temp.txt
+/temp*.ts
+/temp*.js
