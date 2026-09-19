@@ -99,10 +99,10 @@ export default async function ClientDetailPage({
     }
     clientNote = note
 
-    if (note?.team_members?.user_id) {
+    if ((note?.team_members as any)?.user_id) {
       const adminClient = createServiceRoleClient()
       try {
-        const { data } = await adminClient.auth.admin.getUserById(note.team_members.user_id)
+        const { data } = await adminClient.auth.admin.getUserById((note?.team_members as any).user_id)
         if (data.user?.email) updaterName = data.user.email
       } catch (e) {
         // ignore

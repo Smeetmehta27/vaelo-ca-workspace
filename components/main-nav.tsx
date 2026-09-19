@@ -59,6 +59,26 @@ export function MainNav() {
         Notices
       </Link>
       <Link 
+        href="/invoices" 
+        className={`text-sm font-medium transition-colors ${
+          pathname?.startsWith('/invoices') 
+            ? 'text-bronze' 
+            : 'text-ink-soft hover:text-ink'
+        }`}
+      >
+        Invoices
+      </Link>
+      <Link 
+        href="/reminders" 
+        className={`text-sm font-medium transition-colors ${
+          pathname?.startsWith('/reminders') 
+            ? 'text-bronze' 
+            : 'text-ink-soft hover:text-ink'
+        }`}
+      >
+        Reminders
+      </Link>
+      <Link 
         href="/review" 
         className={`text-sm font-medium transition-colors ${
           pathname?.startsWith('/review') 

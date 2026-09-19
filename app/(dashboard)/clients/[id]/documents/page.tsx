@@ -121,7 +121,7 @@ export default async function ClientDocumentsPage({
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {list.document_request_items?.sort((a: DocumentRequestItem, b: DocumentRequestItem) => new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime()).map((item: DocumentRequestItem) => (
-                    <ItemRow key={item.id} item={item} />
+                    <ItemRow key={item.id} item={item} clientName={client.company_name} />
                   ))}
                   {(!list.document_request_items || list.document_request_items.length === 0) && (
                     <tr>
