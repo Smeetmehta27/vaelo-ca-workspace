@@ -1,6 +1,7 @@
 'use client'
 
 import { formatDate } from '@/lib/utils'
+import Link from 'next/link'
 
 type ReportQueueItem = {
   id: string
@@ -48,10 +49,9 @@ export function ReviewQueue({ reports }: { reports: ReportQueueItem[] }) {
                   {formatDate(report.submittedAt)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  {/* Ideally this would link to /reports/[id] but we just put a placeholder button */}
-                  <a href={`/reports/${report.id}`} className="text-bronze hover:text-ink transition-colors font-medium text-sm">
+                  <Link href={`/reports/${report.id}`} className="text-bronze hover:text-ink transition-colors font-medium text-sm">
                     Review
-                  </a>
+                  </Link>
                 </td>
               </tr>
             ))}
