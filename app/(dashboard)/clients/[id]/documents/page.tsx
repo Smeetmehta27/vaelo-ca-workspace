@@ -1,8 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import { getTeamRoster } from '@/lib/actions/team-actions'
 import Link from 'next/link'
 import { NewDocumentRequestForm } from './NewDocumentRequestForm'
 import { ClientDetailTabs } from '@/components/client-detail-tabs'
+import { ClientAssignedTo } from '@/components/client-assigned-to'
 import { ItemRow } from './ItemRow'
 import { DocumentRequestItem } from '@/lib/types'
 import { formatDate } from '@/lib/utils'
@@ -27,6 +29,8 @@ export default async function ClientDocumentsPage({
     notFound()
   }
 
+  const { roster } = await getTeamRoster()
+
   // Fetch document request lists and their items
   const { data: lists } = await supabase
     .from('document_request_lists')
@@ -47,6 +51,11 @@ export default async function ClientDocumentsPage({
           <h2 className="text-3xl font-serif font-medium text-ink">{client.company_name}</h2>
           <p className="text-ink-soft mt-1">{client.entity_type || 'Entity type not specified'}</p>
         </div>
+        <ClientAssignedTo 
+          clientId={client.id} 
+          currentAssignedTo={client.assigned_to} 
+          roster={roster} 
+        />
       </div>
 
       {/* Tabs */}

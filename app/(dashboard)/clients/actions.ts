@@ -92,4 +92,6 @@ export async function reassignClientAction(formData: FormData) {
   }
 
   revalidatePath(`/clients/${client_id}`)
+  revalidatePath(`/clients/${client_id}/documents`)
+  revalidatePath(`/clients/${client_id}/timeline`)
 }

@@ -1,9 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import { getTeamRoster } from '@/lib/actions/team-actions'
 import Link from 'next/link'
 import { formatDateTime } from '@/lib/utils'
 import { TimelineControls } from './TimelineControls'
 import { ClientDetailTabs } from '@/components/client-detail-tabs'
+import { ClientAssignedTo } from '@/components/client-assigned-to'
 
 export default async function ClientTimelinePage({ 
   params 
@@ -21,6 +23,8 @@ export default async function ClientTimelinePage({
   if (clientError || !client) {
     notFound()
   }
+
+  const { roster } = await getTeamRoster()
 
   // Fetch timeline events
   const { data: events } = await supabase
@@ -59,6 +63,11 @@ export default async function ClientTimelinePage({
           <h2 className="text-3xl font-serif font-medium text-ink">{client.company_name}</h2>
           <p className="text-ink-soft mt-1">{client.entity_type || 'Entity type not specified'}</p>
         </div>
+        <ClientAssignedTo 
+          clientId={client.id} 
+          currentAssignedTo={client.assigned_to} 
+          roster={roster} 
+        />
       </div>
 
       {/* Tabs */}
