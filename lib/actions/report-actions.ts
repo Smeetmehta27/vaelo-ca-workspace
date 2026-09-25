@@ -104,4 +104,5 @@ export async function updateReportStatus(reportId: string, newStatus: string) {
 
   revalidatePath('/review')
   revalidatePath(`/reports/${reportId}`) // Assuming this path exists
+  return { success: true, justFinalized: newStatus === 'finalized' }
 }

@@ -5,6 +5,7 @@ import { updateReportStatus } from '@/lib/actions/report-actions'
 import { addReportComment } from '@/lib/actions/comment-actions'
 import { useRouter } from 'next/navigation'
 import { formatDate } from '@/lib/utils'
+import { InvoicePrompt } from '@/components/invoice-prompt'
 
 type Comment = {
   id: string
@@ -17,12 +18,14 @@ type Comment = {
 
 export function ReportReviewActions({
   reportId,
+  clientId,
   currentStatus,
   comments,
   isReviewer,
   availableFigures
 }: {
   reportId: string
+  clientId: string
   currentStatus: string
   comments: Comment[]
   isReviewer: boolean
@@ -33,8 +36,9 @@ export function ReportReviewActions({
   const [figureRef, setFigureRef] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+  const [showInvoicePrompt, setShowInvoicePrompt] = useState(false)
 
-  const handleAction = async (action: 'comment' | 'approve' | 'request_changes') => {
+  const handleAction = async (action: 'comment' | 'approve' | 'request_changes' | 'finalize') => {
     setErrorMsg('')
     if (action === 'request_changes' && !commentText.trim()) {
       setErrorMsg('A comment is required to request changes.')
@@ -49,12 +53,19 @@ export function ReportReviewActions({
         setFigureRef('')
       }
       
+      let justFinalized = false;
       if (action === 'approve') {
         await updateReportStatus(reportId, 'approved')
       } else if (action === 'request_changes') {
         await updateReportStatus(reportId, 'changes_requested')
+      } else if (action === 'finalize') {
+        const res = await updateReportStatus(reportId, 'finalized')
+        if (res && res.justFinalized) justFinalized = true;
       }
       
+      if (justFinalized) {
+        setShowInvoicePrompt(true)
+      }
       router.refresh()
     } catch (err: any) {
       setErrorMsg(err.message || 'An error occurred.')
@@ -146,11 +157,25 @@ export function ReportReviewActions({
                     </button>
                   </>
                 )}
+                {currentStatus === 'approved' && (
+                  <button
+                    onClick={() => handleAction('finalize')}
+                    disabled={isSubmitting}
+                    className="px-4 py-1.5 text-sm font-medium bg-bronze text-white hover:bg-bronze-dim rounded transition-colors disabled:opacity-50"
+                  >
+                    Finalize Report
+                  </button>
+                )}
               </div>
             </div>
           </div>
         )}
       </div>
+      {showInvoicePrompt && (
+        <div className="px-6 pb-6">
+          <InvoicePrompt reportId={reportId} clientId={clientId} autoOpen={true} />
+        </div>
+      )}
     </div>
   )
 }

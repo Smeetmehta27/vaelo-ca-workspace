@@ -122,6 +122,7 @@ export default async function ReportReviewPage({
 
       <ReportReviewActions 
         reportId={report.id}
+        clientId={client.id}
         currentStatus={report.status}
         comments={commentsWithEmails}
         isReviewer={isReviewer}

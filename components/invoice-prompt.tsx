@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { createInvoice } from '@/lib/actions/invoice-actions'
 import { useRouter } from 'next/navigation'
 
-export function InvoicePrompt({ reportId, clientId }: { reportId: string, clientId: string }) {
-  const [isOpen, setIsOpen] = useState(false)
+export function InvoicePrompt({ reportId, clientId, autoOpen = false }: { reportId: string, clientId: string, autoOpen?: boolean }) {
+  const [isOpen, setIsOpen] = useState(autoOpen)
   const [amount, setAmount] = useState('')
   const [dueDate, setDueDate] = useState('')
   const [loading, setLoading] = useState(false)
