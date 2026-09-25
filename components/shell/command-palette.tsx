@@ -65,6 +65,12 @@ export function CommandPalette() {
     <div 
       className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] bg-[rgba(20,23,28,0.35)] backdrop-blur-sm"
       onClick={() => setOpen(false)}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          e.preventDefault()
+          setOpen(false)
+        }
+      }}
     >
       <div 
         className="w-full max-w-[480px] bg-paper border border-stone-line rounded-card overflow-hidden"
