@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { NewDocumentRequestForm } from './NewDocumentRequestForm'
+import { ClientDetailTabs } from '@/components/client-detail-tabs'
 import { ItemRow } from './ItemRow'
 import { DocumentRequestItem } from '@/lib/types'
 import { formatDate } from '@/lib/utils'
@@ -36,13 +37,7 @@ export default async function ClientDocumentsPage({
     .eq('client_id', params.id)
     .order('created_at', { ascending: false })
 
-  const tabs = [
-    { id: 'cma', label: 'CMA Report', href: `/clients/${client.id}?tab=cma` },
-    { id: 'feasibility', label: 'Deal Feasibility', href: `/clients/${client.id}?tab=feasibility` },
-    { id: 'health', label: 'Financial Health', href: `/clients/${client.id}?tab=health` },
-    { id: 'documents', label: 'Documents', href: `/clients/${client.id}/documents` },
-    { id: 'timeline', label: 'Timeline', href: `/clients/${client.id}/timeline` },
-  ]
+
 
   return (
     <div className="max-w-6xl mx-auto flex flex-col gap-8">
@@ -55,25 +50,7 @@ export default async function ClientDocumentsPage({
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-stone-line">
-        <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-          {tabs.map((tab) => (
-            <Link
-              key={tab.id}
-              href={tab.href}
-              className={`
-                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors
-                ${tab.id === 'documents'
-                  ? 'border-ink text-ink'
-                  : 'border-transparent text-ink-soft hover:text-ink hover:border-stone'
-                }
-              `}
-            >
-              {tab.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
+      <ClientDetailTabs clientId={client.id} currentTab="documents" />
 
       {/* Document Requests Content */}
       <div className="flex flex-col gap-6 mb-12">

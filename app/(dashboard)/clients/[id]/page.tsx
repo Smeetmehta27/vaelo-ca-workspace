@@ -17,6 +17,7 @@ import { FeasibilityForm } from '@/components/forms/feasibility-form'
 import { FinancialHealthForm } from '@/components/forms/financial-health-form'
 import { InvoicePrompt } from '@/components/invoice-prompt'
 import { ClientNotesEditor } from '@/components/client-notes-editor'
+import { ClientDetailTabs, TABS } from '@/components/client-detail-tabs'
 
 export default async function ClientDetailPage({ 
   params, 
@@ -118,16 +119,8 @@ export default async function ClientDetailPage({
     .order('created_at', { ascending: false })
     .limit(1)
     .maybeSingle();
-  const defaultFinancials = latestFinancials?.raw_data || null;
 
-  const tabs = [
-    { id: 'cma', label: 'CMA Report' },
-    { id: 'feasibility', label: 'Deal Feasibility' },
-    { id: 'health', label: 'Financial Health' },
-    { id: 'documents', label: 'Documents' },
-    { id: 'timeline', label: 'Timeline' },
-    { id: 'notes', label: 'Client Notes' },
-  ]
+  const defaultFinancials = latestFinancials?.raw_data || null;
 
   return (
     <div className="max-w-6xl mx-auto flex flex-col gap-8">
@@ -157,25 +150,7 @@ export default async function ClientDetailPage({
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-stone-line">
-        <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-          {tabs.map((tab) => (
-            <Link
-              key={tab.id}
-              href={tab.id === 'documents' || tab.id === 'timeline' ? `/clients/${client.id}/${tab.id}` : `/clients/${client.id}?tab=${tab.id}`}
-              className={`
-                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors
-                ${currentTab === tab.id
-                  ? 'border-ink text-ink'
-                  : 'border-transparent text-ink-soft hover:text-ink hover:border-stone'
-                }
-              `}
-            >
-              {tab.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
+      <ClientDetailTabs clientId={client.id} currentTab={currentTab} />
 
       {/* Notes Tab Content */}
       {currentTab === 'notes' && (
@@ -197,7 +172,7 @@ export default async function ClientDetailPage({
         <div className="bg-paper-dim rounded-card border border-stone-line">
           <div className="px-6 py-4 border-b border-stone-line flex justify-between items-center">
             <div>
-              <h3 className="text-lg font-serif font-medium text-ink">Latest {tabs.find(t => t.id === currentTab)?.label}</h3>
+              <h3 className="text-lg font-serif font-medium text-ink">Latest {TABS.find(t => t.id === currentTab)?.label}</h3>
               <p className="text-sm font-mono text-ink-soft mt-1">Generated on {formatDate(latestReport.created_at)}</p>
             </div>
             <span className="text-xs px-3 py-1 rounded-full font-mono uppercase tracking-wider border border-stone-line bg-paper text-ink">
@@ -212,7 +187,7 @@ export default async function ClientDetailPage({
         </div>
       ) : (
         <div className="bg-paper-dim rounded-card border border-stone-line p-8 text-center text-ink-soft">
-          No {tabs.find(t => t.id === currentTab)?.label} generated yet. Fill out the form below to run the pipeline.
+          No {TABS.find(t => t.id === currentTab)?.label} generated yet. Fill out the form below to run the pipeline.
         </div>
       ))}
 
@@ -220,7 +195,7 @@ export default async function ClientDetailPage({
       {currentTab !== 'notes' && (
         <div className="bg-paper-dim rounded-card border border-stone-line overflow-hidden mb-12">
           <div className="px-6 py-4 border-b border-stone-line">
-            <h3 className="text-lg font-serif font-medium text-ink">Generate New {tabs.find(t => t.id === currentTab)?.label}</h3>
+            <h3 className="text-lg font-serif font-medium text-ink">Generate New {TABS.find(t => t.id === currentTab)?.label}</h3>
             <p className="text-sm text-ink-soft mt-1">Enter assumptions below to run the deterministic calculation pipeline.</p>
           </div>
           <div className="p-6">

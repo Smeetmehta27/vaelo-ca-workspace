@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { formatDateTime } from '@/lib/utils'
 import { TimelineControls } from './TimelineControls'
+import { ClientDetailTabs } from '@/components/client-detail-tabs'
 
 export default async function ClientTimelinePage({ 
   params 
@@ -28,13 +29,7 @@ export default async function ClientTimelinePage({
     .eq('client_id', params.id)
     .order('created_at', { ascending: false })
 
-  const tabs = [
-    { id: 'cma', label: 'CMA Report', href: `/clients/${client.id}?tab=cma` },
-    { id: 'feasibility', label: 'Deal Feasibility', href: `/clients/${client.id}?tab=feasibility` },
-    { id: 'health', label: 'Financial Health', href: `/clients/${client.id}?tab=health` },
-    { id: 'documents', label: 'Documents', href: `/clients/${client.id}/documents` },
-    { id: 'timeline', label: 'Timeline', href: `/clients/${client.id}/timeline` },
-  ]
+
 
   const getEventBadge = (eventType: string) => {
     switch (eventType) {
@@ -67,25 +62,7 @@ export default async function ClientTimelinePage({
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-stone-line">
-        <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-          {tabs.map((tab) => (
-            <Link
-              key={tab.id}
-              href={tab.href}
-              className={`
-                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors
-                ${tab.id === 'timeline'
-                  ? 'border-ink text-ink'
-                  : 'border-transparent text-ink-soft hover:text-ink hover:border-stone'
-                }
-              `}
-            >
-              {tab.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
+      <ClientDetailTabs clientId={client.id} currentTab="timeline" />
 
       {/* Timeline Content */}
       <div className="bg-paper-dim rounded-card border border-stone-line overflow-hidden mb-12">
