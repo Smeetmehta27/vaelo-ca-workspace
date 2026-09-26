@@ -47,20 +47,25 @@ export function ReportReviewActions({
 
     setIsSubmitting(true)
     try {
-      if (commentText.trim()) {
-        await addReportComment(reportId, figureRef || null, commentText)
+      let justFinalized = false;
+      
+      if (action === 'request_changes') {
+        await updateReportStatus(reportId, 'changes_requested', commentText)
         setCommentText('')
         setFigureRef('')
-      }
-      
-      let justFinalized = false;
-      if (action === 'approve') {
-        await updateReportStatus(reportId, 'approved')
-      } else if (action === 'request_changes') {
-        await updateReportStatus(reportId, 'changes_requested')
-      } else if (action === 'finalize') {
-        const res = await updateReportStatus(reportId, 'finalized')
-        if (res && res.justFinalized) justFinalized = true;
+      } else {
+        if (commentText.trim()) {
+          await addReportComment(reportId, figureRef || null, commentText)
+          setCommentText('')
+          setFigureRef('')
+        }
+        
+        if (action === 'approve') {
+          await updateReportStatus(reportId, 'approved')
+        } else if (action === 'finalize') {
+          const res = await updateReportStatus(reportId, 'finalized')
+          if (res && res.justFinalized) justFinalized = true;
+        }
       }
       
       if (justFinalized) {

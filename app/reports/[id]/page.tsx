@@ -85,7 +85,7 @@ export default async function ReportReviewPage({
   const myTeamMembership = roster.find(tm => tm.user_id === user?.id)
   
   const isReviewer = myTeamMembership 
-    ? (myTeamMembership.role === 'owner' || myTeamMembership.role === 'partner' || client.assigned_to === myTeamMembership.id)
+    ? (myTeamMembership.role === 'owner' || myTeamMembership.role === 'partner')
     : false
 
   // Prepare available figures for dropdown

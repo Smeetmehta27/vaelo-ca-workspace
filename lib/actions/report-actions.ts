@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
-export async function updateReportStatus(reportId: string, newStatus: string) {
+export async function updateReportStatus(reportId: string, newStatus: string, comment?: string) {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
@@ -11,11 +11,41 @@ export async function updateReportStatus(reportId: string, newStatus: string) {
   // Check current report status and author via RLS
   const { data: report, error: fetchError } = await supabase
     .from('reports')
-    .select('status, clients(assigned_to)')
+    .select('status, clients(ca_id, assigned_to)')
     .eq('id', reportId)
     .single()
 
   if (fetchError || !report) throw new Error('Failed to find report or unauthorized')
+
+  const client = Array.isArray(report.clients) ? report.clients[0] : report.clients
+
+  if (['approved', 'changes_requested', 'finalized'].includes(newStatus)) {
+    const { data: teamMember } = await supabase
+      .from('team_members')
+      .select('role')
+      .eq('user_id', user.id)
+      .eq('firm_id', client?.ca_id)
+      .single()
+
+    if (!teamMember || (teamMember.role !== 'owner' && teamMember.role !== 'partner')) {
+      throw new Error('Unauthorized: Only owners and partners can review reports.')
+    }
+  }
+
+  if (newStatus === 'changes_requested') {
+    if (!comment || !comment.trim()) {
+      throw new Error('A comment is required to request changes.')
+    }
+    
+    const { error: commentError } = await supabase.from('report_comments').insert({
+      report_id: reportId,
+      author_id: user.id,
+      figure_reference: null,
+      comment_text: comment.trim()
+    })
+    
+    if (commentError) throw new Error('Failed to add comment: ' + commentError.message)
+  }
 
   if (newStatus === 'finalized') {
     // Enforcement: report must have been approved at least once
@@ -58,8 +88,6 @@ export async function updateReportStatus(reportId: string, newStatus: string) {
   // Automatic Notification
   if (newStatus === 'changes_requested') {
     // Notify the preparer (the assigned_to user of the client)
-    // Wait, clients is a single object here? Let's cast it safely
-    const client = Array.isArray(report.clients) ? report.clients[0] : report.clients
     if (client && client.assigned_to) {
       // Find the user_id for this team member so we can notify them
       const { data: preparer } = await supabase
@@ -96,9 +124,28 @@ export async function updateReportStatus(reportId: string, newStatus: string) {
         message: 'A report has been re-submitted for your review.',
         link: `/reports/${reportId}`
       })
-    } else {
-      // If no one requested changes before, it's the first time. We could notify owners, but we can't easily fetch owners here cleanly without another query.
-      // We will skip broad notifications for now and just rely on the review queue.
+    } else if (client && client.ca_id) {
+      // First submission - notify owners/partners
+      const { data: reviewers } = await supabase
+        .from('team_members')
+        .select('user_id')
+        .eq('firm_id', client.ca_id)
+        .in('role', ['owner', 'partner'])
+
+      if (reviewers && reviewers.length > 0) {
+        const notifications = reviewers
+          .filter(r => r.user_id !== user.id) // skip if preparer is also an owner/partner submitting
+          .map(r => ({
+            user_id: r.user_id,
+            title: 'Report Submitted for Review',
+            message: 'A new report has been submitted for your review.',
+            link: `/reports/${reportId}`
+          }))
+
+        if (notifications.length > 0) {
+          await supabase.from('notifications').insert(notifications)
+        }
+      }
     }
   }
 
