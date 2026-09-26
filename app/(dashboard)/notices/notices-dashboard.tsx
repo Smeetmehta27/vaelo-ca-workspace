@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { createNotice, updateNoticeTaskStatus } from '@/lib/actions/notice-actions'
+import { useState, useEffect } from 'react'
+import { createNotice, updateNoticeTaskStatus, getOrPinNoticeTemplate } from '@/lib/actions/notice-actions'
 
 type Notice = {
   id: string
@@ -32,6 +32,7 @@ export function NoticesDashboard({
 }) {
   const [notices, setNotices] = useState(initialNotices)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [templateModalOpenId, setTemplateModalOpenId] = useState<string | null>(null)
   
   // Filters
   const [clientFilter, setClientFilter] = useState('')
@@ -131,8 +132,26 @@ export function NoticesDashboard({
                   </td>
                   <td className="py-3 px-4 text-sm font-medium text-ink">{notice.clientName}</td>
                   <td className="py-3 px-4">
-                    <div className="text-sm text-ink">{notice.noticeType}</div>
-                    <div className="text-xs text-ink-soft">Source: {notice.portalSource}</div>
+                    <div className="flex items-center gap-2">
+                      <div className="text-sm text-ink font-medium">{notice.noticeType}</div>
+                      <button
+                        onClick={() => setTemplateModalOpenId(notice.id)}
+                        className="px-2 py-0.5 text-[10px] font-medium text-ink bg-paper border border-stone-line rounded hover:border-ink transition-colors whitespace-nowrap shadow-sm"
+                        title="View Response Template"
+                      >
+                        View Template
+                      </button>
+                    </div>
+                    <div className="text-xs text-ink-soft mt-0.5">Source: {notice.portalSource}</div>
+                    
+                    {templateModalOpenId === notice.id && (
+                      <NoticeTemplateModal
+                        isOpen={true}
+                        onClose={() => setTemplateModalOpenId(null)}
+                        noticeId={notice.id}
+                        noticeType={notice.noticeType}
+                      />
+                    )}
                   </td>
                   <td className="py-3 px-4 text-sm text-ink-soft">{notice.assignedTo}</td>
                   <td className="py-3 px-4">
@@ -217,6 +236,78 @@ export function NoticesDashboard({
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+function NoticeTemplateModal({
+  isOpen,
+  onClose,
+  noticeId,
+  noticeType,
+}: {
+  isOpen: boolean
+  onClose: () => void
+  noticeId: string
+  noticeType: string
+}) {
+  const [templateText, setTemplateText] = useState<string | null | undefined>(undefined)
+  
+  useEffect(() => {
+    if (isOpen) {
+      setTemplateText(undefined)
+      getOrPinNoticeTemplate(noticeId, noticeType).then(res => {
+        if (res.error) setTemplateText(null)
+        else setTemplateText(res.templateText)
+      })
+    }
+  }, [isOpen, noticeId, noticeType])
+
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+      <div className="bg-white rounded-lg shadow-xl max-w-lg w-full overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+          <h3 className="text-lg font-medium text-gray-900">Response Template</h3>
+          <button 
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-500 transition-colors p-1"
+            title="Close"
+          >
+            ✕
+          </button>
+        </div>
+        <div className="p-6 overflow-y-auto">
+          {templateText === undefined ? (
+            <p className="text-sm text-gray-500">Loading template...</p>
+          ) : templateText === null ? (
+            <p className="text-sm text-gray-500">No template available for this notice type yet.</p>
+          ) : (
+            <div className="relative group">
+              <textarea
+                readOnly
+                className="w-full h-64 p-4 text-sm font-mono bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-ink focus:border-transparent resize-none"
+                value={templateText}
+              />
+              <button
+                onClick={() => navigator.clipboard.writeText(templateText)}
+                className="absolute top-2 right-2 px-3 py-1.5 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ink transition-colors"
+              >
+                Copy Text
+              </button>
+            </div>
+          )}
+        </div>
+        <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ink transition-colors"
+          >
+            Close
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

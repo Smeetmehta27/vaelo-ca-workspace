@@ -119,7 +119,7 @@ export function DocumentsTable({ initialItems }: { initialItems: DocumentItem[] 
                     <div className="flex items-center gap-2">
                       {item.dueDate ? formatDate(item.dueDate) : '-'}
                       {isOverdue && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full font-sans uppercase tracking-wider bg-red-100 text-red-700 font-bold">
+                        <span className="text-[10px] px-2 py-0.5 font-sans uppercase tracking-wider text-bronze font-bold">
                           {daysOverdue} {daysOverdue === 1 ? 'Day' : 'Days'} Overdue
                         </span>
                       )}
