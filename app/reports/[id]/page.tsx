@@ -4,6 +4,9 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { formatDate } from '@/lib/utils'
 import { mapV1ToV2Projections } from '@/lib/pipelines/cma-legacy-mapper'
+import { mapCMAReportSchedules } from '@/lib/report-mappers/cma-mapper'
+import { mapFeasibilityReport } from '@/lib/report-mappers/feasibility-mapper'
+import { mapFinancialHealthReport } from '@/lib/report-mappers/financial-health-mapper'
 import { CMAReportViewer } from '@/components/cma-report-viewer'
 import { FeasibilityReportViewer } from '@/components/feasibility-report-viewer'
 import { FinancialHealthViewer } from '@/components/financial-health-viewer'
@@ -89,13 +92,61 @@ export default async function ReportReviewPage({
     : false
 
   // Prepare available figures for dropdown
-  let availableFigures: string[] = []
+  let availableFigures: { id: string, displayLabel: string, formula: string, inputs: Record<string, number>, value: number }[] = []
+  
   if (report.report_type === 'cma') {
-    availableFigures = ['Revenue', 'Cost of Sales', 'Gross Profit', 'EBITDA', 'Net Profit', 'Total Assets', 'Total Liabilities']
-  } else if (report.report_type === 'feasibility') {
-    availableFigures = ['Project Cost', 'Funding', 'NPV', 'IRR', 'Payback Period', 'DSCR']
-  } else if (report.report_type === 'financial_health') {
-    availableFigures = ['Current Ratio', 'Quick Ratio', 'Debt to Equity', 'Interest Coverage', 'Operating Margin']
+    const schedules = mapCMAReportSchedules(cmaHistorical as any, cmaProjections);
+    schedules.forEach(schedule => {
+      schedule.rows.forEach(row => {
+        if (row.isHeader || !row.projectedValues) return;
+        // The prompt says to skip header/subtotal rows with no AuditedValue, we just check if value has formula/inputs
+        row.projectedValues.forEach((val, idx) => {
+          if (val && typeof val === 'object' && 'formula' in val && 'inputs' in val) {
+            const colName = schedule.columns[idx + 1] || `Year ${idx + 1}`;
+            availableFigures.push({
+              id: `${schedule.scheduleTitle}__${row.label}__${idx}`,
+              displayLabel: `${schedule.scheduleTitle} — ${row.label} (${colName})`,
+              formula: val.formula,
+              inputs: val.inputs,
+              value: val.value
+            });
+          }
+        });
+      });
+    });
+  } else if (report.report_type === 'feasibility' || report.report_type === 'financial_health') {
+    let schedules: any[] = [];
+    if (report.report_type === 'feasibility') {
+      schedules = mapFeasibilityReport(report.output_data as any).schedules;
+    } else {
+      schedules = mapFinancialHealthReport(report.output_data as any).schedules;
+    }
+
+    schedules.forEach(schedule => {
+      schedule.rows.forEach((row: any, rIdx: number) => {
+        if (row.isHeader) return;
+        const fields = ['value', 'historical', 'year1', 'year2', 'year3'];
+        fields.forEach(field => {
+          const val = row[field];
+          if (val && typeof val === 'object' && 'formula' in val && 'inputs' in val) {
+            let colName = field;
+            if (field === 'value') colName = schedule.columns[0] || 'Value';
+            else if (field === 'historical') colName = 'Historical';
+            else if (field === 'year1') colName = 'Year 1';
+            else if (field === 'year2') colName = 'Year 2';
+            else if (field === 'year3') colName = 'Year 3';
+            
+            availableFigures.push({
+              id: `${schedule.scheduleTitle}__${row.label}__${field}__${rIdx}`,
+              displayLabel: `${schedule.scheduleTitle} — ${row.label} (${colName})`,
+              formula: val.formula,
+              inputs: val.inputs,
+              value: val.value
+            });
+          }
+        });
+      });
+    });
   }
 
   const preparer = roster.find(tm => tm.id === client.assigned_to)

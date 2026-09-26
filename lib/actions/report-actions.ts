@@ -3,7 +3,14 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
-export async function updateReportStatus(reportId: string, newStatus: string, comment?: string) {
+export async function updateReportStatus(
+  reportId: string, 
+  newStatus: string, 
+  comment?: string,
+  figureLabel?: string | null,
+  figureFormula?: string | null,
+  figureInputs?: Record<string, any> | null
+) {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
@@ -40,8 +47,10 @@ export async function updateReportStatus(reportId: string, newStatus: string, co
     const { error: commentError } = await supabase.from('report_comments').insert({
       report_id: reportId,
       author_id: user.id,
-      figure_reference: null,
-      comment_text: comment.trim()
+      figure_reference: figureLabel || null,
+      comment_text: comment.trim(),
+      figure_formula: figureFormula || null,
+      figure_inputs: figureInputs || null
     })
     
     if (commentError) throw new Error('Failed to add comment: ' + commentError.message)

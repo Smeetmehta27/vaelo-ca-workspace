@@ -11,6 +11,8 @@ type Comment = {
   id: string
   author_id: string
   figure_reference: string | null
+  figure_formula?: string | null
+  figure_inputs?: Record<string, any> | null
   comment_text: string
   created_at: string
   author_email?: string
@@ -29,7 +31,7 @@ export function ReportReviewActions({
   currentStatus: string
   comments: Comment[]
   isReviewer: boolean
-  availableFigures: string[]
+  availableFigures: { id: string, displayLabel: string, formula: string, inputs: Record<string, any>, value: number }[]
 }) {
   const router = useRouter()
   const [commentText, setCommentText] = useState('')
@@ -49,13 +51,18 @@ export function ReportReviewActions({
     try {
       let justFinalized = false;
       
+      const selectedFig = availableFigures.find(f => f.id === figureRef);
+      const figLabel = selectedFig ? selectedFig.displayLabel : (figureRef || null);
+      const figFormula = selectedFig ? selectedFig.formula : null;
+      const figInputs = selectedFig ? selectedFig.inputs : null;
+      
       if (action === 'request_changes') {
-        await updateReportStatus(reportId, 'changes_requested', commentText)
+        await updateReportStatus(reportId, 'changes_requested', commentText, figLabel, figFormula, figInputs)
         setCommentText('')
         setFigureRef('')
       } else {
         if (commentText.trim()) {
-          await addReportComment(reportId, figureRef || null, commentText)
+          await addReportComment(reportId, figLabel, commentText, figFormula, figInputs)
           setCommentText('')
           setFigureRef('')
         }
@@ -95,8 +102,18 @@ export function ReportReviewActions({
                   <div className="text-xs font-mono text-ink-soft">{formatDate(comment.created_at)}</div>
                 </div>
                 {comment.figure_reference && (
-                  <div className="mb-2 inline-block bg-stone-line/30 px-2 py-0.5 rounded text-xs font-mono text-ink-soft">
-                    Ref: {comment.figure_reference}
+                  <div className="mb-2">
+                    <div className="inline-block bg-stone-line/30 px-2 py-0.5 rounded text-xs font-mono text-ink-soft">
+                      Ref: {comment.figure_reference}
+                    </div>
+                    {comment.figure_formula && (
+                      <div className="mt-1 text-xs font-mono text-ink-soft/80 flex flex-col gap-0.5 ml-1">
+                        <div>Formula: {comment.figure_formula}</div>
+                        {comment.figure_inputs && Object.keys(comment.figure_inputs).length > 0 && (
+                          <div>Inputs: {Object.entries(comment.figure_inputs).map(([k, v]) => `${k}=${v}`).join(', ')}</div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
                 <p className="text-sm text-ink">{comment.comment_text}</p>
@@ -131,7 +148,7 @@ export function ReportReviewActions({
               >
                 <option value="">No reference</option>
                 {availableFigures.map(fig => (
-                  <option key={fig} value={fig}>{fig}</option>
+                  <option key={fig.id} value={fig.id}>{fig.displayLabel}</option>
                 ))}
               </select>
 
