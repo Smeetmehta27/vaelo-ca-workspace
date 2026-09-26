@@ -112,22 +112,22 @@ export default async function InvoicesPage({
                     ${Number(invoice.amount).toFixed(2)}
                   </td>
                   <td className="py-4 px-4 align-top">
-                    <span className={isOverdue ? 'text-red-600 font-medium' : 'text-ink'}>
+                    <span className={isOverdue ? 'text-bronze font-bold' : 'text-ink'}>
                       {formatDate(invoice.due_date)}
                     </span>
-                    {isOverdue && tab !== 'overdue' && <span className="block text-xs text-red-500 mt-1">Overdue</span>}
+                    {isOverdue && tab !== 'overdue' && <span className="block text-xs text-bronze mt-1">Overdue</span>}
                   </td>
                   {tab === 'overdue' && (
-                    <td className="py-4 px-4 align-top font-mono font-medium text-red-600">
+                    <td className="py-4 px-4 align-top font-mono font-medium text-bronze">
                       {invoice.days_overdue} days
                     </td>
                   )}
                   <td className="py-4 px-4 align-top">
-                    <span className={`inline-block px-2 py-1 text-xs rounded-full font-mono uppercase tracking-wider
-                      ${invoice.status === 'paid' ? 'bg-green-100 text-green-800 border border-green-200' :
-                        invoice.status === 'sent' ? 'bg-blue-100 text-blue-800 border border-blue-200' :
-                        invoice.status === 'overdue' ? 'bg-red-100 text-red-800 border border-red-200' :
-                        'bg-stone-dim text-ink-soft border border-stone-line'}
+                    <span className={`inline-block px-2 py-1 text-xs rounded-full font-mono uppercase tracking-wider border
+                      ${invoice.status === 'paid' ? 'bg-paper text-bronze border-stone-line' :
+                        invoice.status === 'sent' ? 'bg-paper text-ink border-stone-line' :
+                        invoice.status === 'overdue' ? 'bg-paper text-bronze font-bold border-stone-line' :
+                        'bg-paper text-ink-soft border-stone-line'}
                     `}>
                       {invoice.status}
                     </span>

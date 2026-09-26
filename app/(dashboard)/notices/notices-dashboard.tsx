@@ -160,9 +160,9 @@ export function NoticesDashboard({
                       onChange={(e) => notice.taskId && handleStatusChange(notice.taskId, e.target.value)}
                       disabled={!notice.taskId}
                       className={`text-sm rounded-full px-3 py-1 outline-none border focus:ring-1 focus:ring-bronze cursor-pointer appearance-none ${
-                        notice.taskStatus === 'done' ? 'bg-[#E3F2E1] text-[#2E6B2A] border-[#A8D3A3]' :
-                        notice.taskStatus === 'in_progress' ? 'bg-[#E1EAF2] text-[#2A4D6B] border-[#A3C4D3]' :
-                        notice.taskStatus === 'overdue' ? 'bg-[#F2E1E1] text-[#6B2A2A] border-[#D3A3A3]' :
+                        notice.taskStatus === 'done' ? 'bg-paper text-bronze border-stone-line' :
+                        notice.taskStatus === 'in_progress' ? 'bg-paper text-ink border-stone-line' :
+                        notice.taskStatus === 'overdue' ? 'bg-paper text-bronze font-bold border-stone-line' :
                         'bg-paper-dim text-ink-soft border-stone-line'
                       }`}
                     >
